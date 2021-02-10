@@ -9,5 +9,5 @@ parameters:
     type: string
 steps:
   - run:
-    name: "Packing Nuget"
-    command: dotnet pack <<parameters.namespace>> -c Release --output /app/nupkgs -p:VersionSuffix=<<parameters.version_suffix>> -p:VersionPrefix=<<parameters.version_prefix>>
+      name: "Packing Nuget"
+      command: dotnet pack <<parameters.namespace>> -c Release --output /app/nupkgs -p:VersionSuffix=<<parameters.version_suffix>> -p:VersionPrefix=<<parameters.version_prefix>>
