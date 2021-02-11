@@ -5,4 +5,4 @@ executor: default
 
 steps:
   - checkout
-  - trading-team-orb/dotnet_test
+  - dotnet_test
