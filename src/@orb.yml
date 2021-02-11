@@ -10,6 +10,5 @@ display:
   home_url: "https://www.website.com/docs"
   source_url: "https://www.github.com/EXAMPLE_ORG/EXAMPLE_PROJECT"
 
-# If your orb requires other orbs, you can import them like this. Otherwise remove the "orbs" stanza.
-# orbs:
-#  hello: circleci/hello-build@0.0.5
+orbs:
+  slack: circleci/slack@4.2.1

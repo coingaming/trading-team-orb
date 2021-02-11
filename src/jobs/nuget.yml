@@ -1,8 +1,5 @@
 description: >
   Pack NuGets
-  
-orbs:
-  slack: circleci/slack@4.2.1
 
 executor: default
 
