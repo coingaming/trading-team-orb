@@ -2,8 +2,7 @@ description: >
   Pack NuGets by namepace
 parameters:
   namespaces:
-    type: enum
-    enum: []
+    type: string
   version_suffix:
     type: string
   version_prefix:

@@ -6,8 +6,7 @@ executor: default
 parameters:
   namespaces:
     description: A list of namespaces for which to build NuGets
-    type: enum
-    enum: []
+    type: string
   version_prefix:
     description: Base version
     type: string
