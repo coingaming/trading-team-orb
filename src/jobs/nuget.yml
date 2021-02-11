@@ -7,19 +7,16 @@ parameters:
   namespaces:
     description: A list of namespaces for which to build NuGets
     type: string
-  version_prefix:
+  base_version:
     description: Base version
-    type: string
-  version_suffix:
-    description: Trailing version
     type: string
 
 steps:
   - checkout
+  - inject_version_data:
+      base_version: <<parameters.base_version>>
   - pack_nuget:
       namespaces: <<parameters.namespaces>>
-      version_prefix: <<parameters.version_prefix>>
-      version_suffix: <<parameters.version_suffix>>
   - push_nuget
   - inject_slack_templates
   - slack/notify:

@@ -1,0 +1,12 @@
+description: >
+  Injects Version Data Into Environment Variables
+parameters:
+  base_version:
+    type: string
+steps:
+  - run:
+      name: "Setting up variables"
+      command: |
+        echo 'export VERSION_PREFIX=<<parameters.version_suffix>>.$CIRCLE_BUILD_NUM' >> $BASH_ENV
+        echo 'if [ $CIRCLE_BRANCH != "master" ]; then export VERSION_SUFFIX=$CIRCLE_BRANCH; fi' >> $BASH_ENV
+        echo 'if [ $CIRCLE_BRANCH != "master" ]; then export FULL_VERSION=$VERSION_PREFIX-$VERSION_SUFFIX; else export FULL_VERSION=$VERSION_PREFIX; fi' >> $BASH_ENV
