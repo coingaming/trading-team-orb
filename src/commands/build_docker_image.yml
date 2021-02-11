@@ -8,4 +8,5 @@ parameters:
 steps:
   - run:
       name: "Running docker build"
-      command: docker build -f CircleDockerfile . -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DOCKER_PROJECT_NAME:<<parameters.base_version>>.$CIRCLE_BUILD_NUM<<parameters.version_suffix>>
+      command: |
+        docker build -f CircleDockerfile . -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DOCKER_PROJECT_NAME:<<parameters.base_version>>.$CIRCLE_BUILD_NUM<<parameters.version_suffix>>
