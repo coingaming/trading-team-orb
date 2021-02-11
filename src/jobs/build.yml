@@ -1,0 +1,18 @@
+description: >
+  Runs Solution Build
+
+executor: default
+
+parameters:
+  solution_path:
+    description: Path to csproj file relative to project root
+    type: string
+
+steps:
+  - checkout
+  - build_solution:
+      solution_path: <<parameters.solution_path>>
+  - persist_to_workspace:
+      root: ./
+      paths:
+        - .
