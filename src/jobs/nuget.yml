@@ -1,0 +1,34 @@
+description: >
+  Pack NuGets
+  
+orbs:
+  slack: circleci/slack@4.2.1
+
+executor: default
+
+parameters:
+  namespaces:
+    description: A list of namespaces for which to build NuGets
+    type: enum
+  version_prefix:
+    description: Base version
+    type: string
+  version_suffix:
+    description: Trailing version
+    type: string
+
+steps:
+  - checkout
+  - pack_nuget:
+      namespaces: <<parameters.namespaces>>
+      version_prefix: <<parameters.version_prefix>>
+      version_suffix: <<parameters.version_suffix>>
+  - push_nuget
+  - inject_slack_templates
+  - slack/notify:
+      event: fail
+      template: basic_fail_1
+  - slack/notify:
+      template: NUGET_SUCCESS_TEMPLATE
+      event: pass
+

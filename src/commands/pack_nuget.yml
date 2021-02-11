@@ -1,8 +1,8 @@
 description: >
-  Pack nuget by name
+  Pack NuGets by namepace
 parameters:
-  namespace:
-    type: string
+  namespaces:
+    type: enum
   version_suffix:
     type: string
   version_prefix:
@@ -10,4 +10,7 @@ parameters:
 steps:
   - run:
       name: "Packing Nuget"
-      command: dotnet pack <<parameters.namespace>> -c Release --output /app/nupkgs -p:VersionSuffix=<<parameters.version_suffix>> -p:VersionPrefix=<<parameters.version_prefix>>
+      command: |
+        for i in <<parameters.namespaces>>; do
+          dotnet pack <<parameters.namespace>> -c Release --output /app/nupkgs -p:VersionSuffix=<<parameters.version_suffix>> -p:VersionPrefix=<<parameters.version_prefix>>
+        done
