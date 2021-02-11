@@ -17,7 +17,7 @@ parameters:
 steps:
   - checkout
   - pack_nuget:
-      namespaces: <<parameters.namespaces>>
+      namespace_list: <<parameters.namespaces>>
       version_prefix: <<parameters.version_prefix>>
       version_suffix: <<parameters.version_suffix>>
   - push_nuget
