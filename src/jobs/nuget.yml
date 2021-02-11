@@ -7,6 +7,7 @@ parameters:
   namespaces:
     description: A list of namespaces for which to build NuGets
     type: enum
+    enum: []
   version_prefix:
     description: Base version
     type: string
@@ -17,7 +18,7 @@ parameters:
 steps:
   - checkout
   - pack_nuget:
-      namespace_list: <<parameters.namespaces>>
+      namespaces: <<parameters.namespaces>>
       version_prefix: <<parameters.version_prefix>>
       version_suffix: <<parameters.version_suffix>>
   - push_nuget
