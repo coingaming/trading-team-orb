@@ -1,0 +1,8 @@
+description: >
+  Runs Unit Tests
+
+executor: default
+
+steps:
+  - checkout
+  - trading-team-orb/dotnet_test
