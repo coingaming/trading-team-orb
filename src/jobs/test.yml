@@ -4,6 +4,5 @@ description: >
 executor: default
 
 steps:
-  - run: echo "This is pipeline ID $PIPELINE_ID"
   - checkout
   - dotnet_test

@@ -10,12 +10,14 @@ parameters:
   base_version:
     description: Base version
     type: string
+  pipeline_id:
+    type: string
 
 steps:
   - checkout
   - inject_version_data:
       base_version: <<parameters.base_version>>
-      pipeline_id: $PIPELINE_ID
+      pipeline_id: <<parameters.pipeline_id>>
   - pack_nuget:
       namespaces: <<parameters.namespaces>>
   - push_nuget
