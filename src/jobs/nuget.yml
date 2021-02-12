@@ -15,7 +15,7 @@ steps:
   - checkout
   - inject_version_data:
       base_version: <<parameters.base_version>>
-      pipeline_id: << pipeline.id >>
+      pipeline_id: $PIPELINE_ID
   - pack_nuget:
       namespaces: <<parameters.namespaces>>
   - push_nuget
