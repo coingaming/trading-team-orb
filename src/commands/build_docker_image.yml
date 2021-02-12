@@ -1,12 +1,10 @@
 description: >
   Build Docker Image
 parameters:
-  base_version:
-    type: string
-  version_suffix:
+  full_version:
     type: string
 steps:
   - run:
       name: "Running docker build"
       command: |
-        docker build -f CircleDockerfile . -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DOCKER_PROJECT_NAME:<<parameters.base_version>>.$CIRCLE_BUILD_NUM<<parameters.version_suffix>>
+        docker build -f CircleDockerfile . -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DOCKER_PROJECT_NAME:<<parameters.full_version>>
