@@ -11,7 +11,7 @@ parameters:
     description: Base version
     type: string
   pipeline_id:
-    type: string
+    type: integer
 
 steps:
   - checkout
