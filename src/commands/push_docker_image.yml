@@ -3,9 +3,11 @@ description: >
 parameters:
   full_version:
     type: string
+  repository_name:
+    type: string
 steps:
   - run:
       name: "Pushing docker image to repository"
       command: |
         aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$DOCKER_PROJECT_NAME:<<parameters.full_version>>
+        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>>
