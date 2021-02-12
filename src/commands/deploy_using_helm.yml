@@ -1,0 +1,12 @@
+description: >
+  Deploy using Helm
+
+parameters:
+  kube_service_name:
+    type: string
+steps:
+  - run:
+      name: "Running tests"
+      command: |
+        aws eks update-kubeconfig --name trading-dev-eks --region $AWS_DEFAULT_REGION
+        helm upgrade --install -ntrading --set env=dev,image.tag=$FULL_VERSION << parameters.kube_service_name >> ./helm --debug

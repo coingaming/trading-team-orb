@@ -1,0 +1,21 @@
+description: >
+  Deploy to EKS
+
+executor: docker-builder
+
+parameters:
+  base_version:
+    description: Base version
+    type: string
+  pipeline_id:
+    type: integer
+  kube_service_name:
+    type: string
+
+steps:
+  - checkout
+  - inject_version_data:
+      base_version: <<parameters.base_version>>
+      pipeline_id: << parameters.pipeline_id >>
+  - deploy_using_helm:
+      kube_service_name: <<parameters.kube_service_name>>
