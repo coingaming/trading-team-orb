@@ -16,6 +16,7 @@ steps:
   - setup_remote_docker
   - inject_version_data:
       base_version: <<parameters.base_version>>
+      pipeline_id: << pipeline.id >>
   - build_docker_image:
       full_version: $FULL_VERSION
       repository_name: <<parameters.repository_name>>

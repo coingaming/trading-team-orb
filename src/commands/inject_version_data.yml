@@ -3,10 +3,12 @@ description: >
 parameters:
   base_version:
     type: string
+  pipeline_id:
+    type: string
 steps:
   - run:
       name: "Setting up variables"
       command: |
-        echo 'export VERSION_PREFIX=<<parameters.base_version>>.<< pipeline.id >>' >> $BASH_ENV
-        echo 'if [ $CIRCLE_BRANCH != "master" ]; then export VERSION_SUFFIX=<< pipeline.id >>; fi' >> $BASH_ENV
+        echo 'export VERSION_PREFIX=<<parameters.base_version>>.<< parameters.pipeline_id >>' >> $BASH_ENV
+        echo 'if [ $CIRCLE_BRANCH != "master" ]; then export VERSION_SUFFIX=<< parameters.pipeline_id >>; fi' >> $BASH_ENV
         echo 'if [ $CIRCLE_BRANCH != "master" ]; then export FULL_VERSION=$VERSION_PREFIX-$VERSION_SUFFIX; else export FULL_VERSION=$VERSION_PREFIX; fi' >> $BASH_ENV
