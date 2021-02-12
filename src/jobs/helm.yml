@@ -19,3 +19,7 @@ steps:
       pipeline_id: << parameters.pipeline_id >>
   - deploy_using_helm:
       kube_service_name: <<parameters.kube_service_name>>
+filters:
+  branches:
+    only:
+      - master
