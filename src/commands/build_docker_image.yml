@@ -13,4 +13,5 @@ steps:
       name: "Running docker build"
       command: |
         cd <<parameters.base_path>>
+        if [ <<parameters.base_path>> != "." ]; then cp -R /home/circleci/project/app .; fi
         docker build -f CircleDockerfile . -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>>
