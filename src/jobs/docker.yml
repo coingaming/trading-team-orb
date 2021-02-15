@@ -11,6 +11,9 @@ parameters:
     type: integer
   repository_name:
     type: string
+  base_path:
+    type: string
+    default: "."
 
 steps:
   - attach_workspace:
@@ -21,6 +24,7 @@ steps:
       pipeline_id: << parameters.pipeline_id >>
   - build_docker_image:
       full_version: $FULL_VERSION
+      base_path: <<parameters.base_path>>
       repository_name: <<parameters.repository_name>>
   - push_docker_image:
       full_version: $FULL_VERSION
