@@ -36,4 +36,4 @@ steps:
   - slack/notify:
       template: DOCKER_SUCCESS_TEMPLATE
       event: pass
-      branch_pattern: ^((?!master).)*$
+      branch_pattern: develop
