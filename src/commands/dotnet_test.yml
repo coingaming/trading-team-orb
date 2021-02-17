@@ -1,0 +1,6 @@
+description: >
+  Run dotnet test
+steps:
+  - run:
+      name: "Running tests"
+      command: dotnet test

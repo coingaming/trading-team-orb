@@ -1,0 +1,39 @@
+description: >
+  Pack NuGets
+
+executor: docker-builder
+
+parameters:
+  base_version:
+    description: Base version
+    type: string
+  pipeline_id:
+    type: integer
+  repository_name:
+    type: string
+  base_path:
+    type: string
+    default: "."
+
+steps:
+  - attach_workspace:
+      at: ./
+  - setup_remote_docker
+  - inject_version_data:
+      base_version: <<parameters.base_version>>
+      pipeline_id: << parameters.pipeline_id >>
+  - build_docker_image:
+      full_version: $FULL_VERSION
+      base_path: <<parameters.base_path>>
+      repository_name: <<parameters.repository_name>>
+  - push_docker_image:
+      full_version: $FULL_VERSION
+      repository_name: <<parameters.repository_name>>
+  - inject_slack_templates
+  - slack/notify:
+      event: fail
+      template: basic_fail_1
+  - slack/notify:
+      template: DOCKER_SUCCESS_TEMPLATE
+      event: pass
+      branch_pattern: develop

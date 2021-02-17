@@ -1,0 +1,6 @@
+description: >
+  Push all nugets to Artifact Storage
+steps:
+  - run:
+      name: "Pushing Nugets"
+      command: dotnet nuget push /app/nupkgs/ --source "nuget/Main"

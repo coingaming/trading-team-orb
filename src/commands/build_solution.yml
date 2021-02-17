@@ -1,0 +1,12 @@
+description: >
+  Builds target solution
+parameters:
+  solution_path:
+    type: string
+steps:
+  - run:
+      name: "Building solution"
+      command: |
+        dotnet build
+        dotnet publish <<parameters.solution_path>> -c Release -o app/out
+        rm -rf build
