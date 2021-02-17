@@ -8,5 +8,8 @@ steps:
   - run:
       name: "Running Helm Upgrade"
       command: |
-        aws eks update-kubeconfig --name trading-dev-eks --region $AWS_DEFAULT_REGION
-        helm upgrade --install -ntrading --set env=dev,image.tag=$FULL_VERSION << parameters.kube_service_name >> ./helm --debug
+        export CLUSTER_ENV_NAME=dev
+        mv trading-circleci-notifications/helm .
+        cp values helm/
+        aws eks update-kubeconfig --name trading-$CLUSTER_ENV_NAME-eks --region $AWS_DEFAULT_REGION
+        helm upgrade --install -ntrading --set env=$CLUSTER_ENV_NAME,image.tag=$FULL_VERSION << parameters.kube_service_name >> ./helm --debug
