@@ -36,3 +36,6 @@ steps:
   - slack/notify:
       template: DOCKER_SUCCESS_TEMPLATE
       event: pass
+      filters:
+        branches:
+          ignore: master

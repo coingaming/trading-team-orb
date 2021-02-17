@@ -20,3 +20,10 @@ steps:
       pipeline_id: << parameters.pipeline_id >>
   - deploy_using_helm:
       kube_service_name: <<parameters.kube_service_name>>
+  - inject_slack_templates
+  - slack/notify:
+      event: fail
+      template: basic_fail_1
+  - slack/notify:
+      template: HELM_SUCCESS_TEMPLATE
+      event: pass
