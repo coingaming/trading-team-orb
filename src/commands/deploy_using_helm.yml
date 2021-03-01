@@ -6,7 +6,7 @@ parameters:
     type: string
   values_file_prefix:
     type: string
-    defaut: values
+    default: values
 steps:
   - run:
       name: "Running Helm Upgrade"
