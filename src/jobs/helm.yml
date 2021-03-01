@@ -11,6 +11,9 @@ parameters:
     type: integer
   kube_service_name:
     type: string
+  values_file_prefix:
+    type: string
+    defaut: values
 
 steps:
   - checkout
@@ -20,6 +23,7 @@ steps:
       pipeline_id: << parameters.pipeline_id >>
   - deploy_using_helm:
       kube_service_name: <<parameters.kube_service_name>>
+      values_file_prefix: <<parameters.values_file_prefix>>
   - inject_slack_templates
   - slack/notify:
       event: fail

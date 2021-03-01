@@ -4,13 +4,16 @@ description: >
 parameters:
   kube_service_name:
     type: string
+  values_file_prefix:
+    type: string
+    defaut: values
 steps:
   - run:
       name: "Running Helm Upgrade"
       command: |
         export CLUSTER_ENV_NAME=dev
         mv trading-circleci-notifications/helm .
-        cp helm_templates/values-$CLUSTER_ENV_NAME.yaml helm/values.yaml
+        cp helm_templates/<< parameters.values_file_prefix >>-$CLUSTER_ENV_NAME.yaml helm/values.yaml
         aws eks update-kubeconfig --name trading-$CLUSTER_ENV_NAME-eks --region $AWS_DEFAULT_REGION
         helm upgrade --install -ntrading \
          --set image.repository=178636341549.dkr.ecr.eu-central-1.amazonaws.com/trading-dev-<< parameters.kube_service_name >> \
