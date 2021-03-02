@@ -14,6 +14,8 @@ parameters:
   values_file_prefix:
     type: string
     default: values
+  repository_name:
+    type: string
 
 steps:
   - checkout
@@ -24,6 +26,7 @@ steps:
   - deploy_using_helm:
       kube_service_name: <<parameters.kube_service_name>>
       values_file_prefix: <<parameters.values_file_prefix>>
+      repository_name: <<parameters.repository_name>>
   - inject_slack_templates
   - slack/notify:
       event: fail
