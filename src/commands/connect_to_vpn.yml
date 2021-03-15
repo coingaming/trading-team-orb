@@ -5,6 +5,7 @@ steps:
   - run:
       name: Open ssh tunnel
       command: |
+        sudo mkdir /root/.ssh
         sudo -- sh -c "ssh-keyscan -H vpn.trading.io >> /root/.ssh/known_hosts"
         echo $SSH_KEY_PROD | base64 --decode > ssh_key
         chmod 400 ssh_key
