@@ -3,26 +3,7 @@ description: >
 
 steps:
   - run:
-      name: Install OpenVPN
+      name: Open ssh tunnel
       command: |
-        sudo apt-get update
-        sudo apt-get install openvpn net-tools -y
-
-  - run:
-      name: Check IP before VPN connection
-      command: |
-        ip a
-        ip r
-        sudo netstat -anp
-        cat /etc/resolv.conf
-        curl checkip.amazonaws.com
-  - run:
-      name: "Connect to VPN"
-      command: |
-        phone_home=$(netstat -an | grep ':22 .*ESTABLISHED' | head -n1 | awk '{ split($5, a, ":"); print a[1] }')
-        echo $phone_home
-        echo $VPN_CLIENT_CONFIG | base64 -d
-        echo $VPN_CLIENT_CONFIG | base64 --decode > /tmp/config.ovpn
-        sudo openvpn --config /tmp/config.ovpn \
-          --route $phone_home 255.255.255.255 net_gateway \
-          --route 169.254.0.0 255.255.0.0 net_gateway
+        echo $SSH_KEY_PROD | base64 --decode > ssh_key
+        ssh -i ssh_key -L 10666:10.10.27.102:443 -Nf ubuntu@vpn.trading.io
