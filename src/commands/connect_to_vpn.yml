@@ -1,0 +1,30 @@
+description: >
+  Connect to VPN, so we can control the live cluster
+
+steps:
+  - run:
+    name: Install OpenVPN
+    command: |
+      sudo apt-get update
+      sudo apt-get install openvpn net-tools -y
+
+  - run:
+    name: Check IP before VPN connection
+    command: |
+      ip a
+      ip r
+      sudo netstat -anp
+      cat /etc/resolv.conf
+      curl checkip.amazonaws.com
+  - run:
+      name: "Connect to VPN"
+      command: |
+        phone_home=$(netstat -an | grep ':22 .*ESTABLISHED' | head -n1 | awk '{ split($5, a, ":"); print a[1] }')
+        # phone_home=$(netstat -an | grep '\.2222\s.*ESTABLISHED' | head -n1 | awk '{ split($5, a, "."); print a[1] "." a[2] "." a[3] "." a[4] }') # if you use macOS executor, you can uncomment this line, and comment the above line
+        echo $phone_home
+        echo $VPN_CLIENT_CONFIG | base64 -d
+        echo $VPN_CLIENT_CONFIG | base64 --decode > /tmp/config.ovpn
+            
+        sudo openvpn --config /tmp/config.ovpn \
+          --route $phone_home 255.255.255.255 net_gateway \
+          --route 169.254.0.0 255.255.0.0 net_gateway
