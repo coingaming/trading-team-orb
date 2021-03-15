@@ -5,5 +5,7 @@ steps:
   - run:
       name: Open ssh tunnel
       command: |
+        ssh-keyscan -H vpn.trading.io >> ~/.ssh/known_hosts
         echo $SSH_KEY_PROD | base64 --decode > ssh_key
-        ssh -i ssh_key -L 10666:10.10.27.102:443 -Nf ubuntu@vpn.trading.io
+        chmod 400 ssh_key
+        ssh -i ssh_key -r -L 10666:$PROD_K8S_ENDPOINT:443 -Nf ubuntu@vpn.trading.io
