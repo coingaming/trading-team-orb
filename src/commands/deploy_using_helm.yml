@@ -14,10 +14,11 @@ steps:
       name: "Running Helm Upgrade"
       command: |
         export CLUSTER_ENV_NAME=dev
+        export HELM_NAMESPACE=trading
         if [ "$CIRCLE_BRANCH" = "release" ]; then
           export CLUSTER_ENV_NAME=prod
+          export HELM_NAMESPACE=trading-$CLUSTER_ENV_NAME
         fi
-        export HELM_NAMESPACE=trading-$CLUSTER_ENV_NAME
         mv trading-circleci-notifications/helm .
         cp helm_templates/<< parameters.values_file_prefix >>-$CLUSTER_ENV_NAME.yaml helm/values.yaml
         aws eks update-kubeconfig --name trading-$CLUSTER_ENV_NAME-eks --region $AWS_DEFAULT_REGION
