@@ -23,7 +23,9 @@ steps:
   - inject_version_data:
       base_version: <<parameters.base_version>>
       pipeline_id: << parameters.pipeline_id >>
-  - connect_to_vpn
+  - connect_to_vpn:
+    when:
+      equal: [master, $CIRCLE_BRANCH]
   - deploy_using_helm:
       kube_service_name: <<parameters.kube_service_name>>
       values_file_prefix: <<parameters.values_file_prefix>>
