@@ -28,7 +28,8 @@ steps:
       kube_service_name: <<parameters.kube_service_name>>
       values_file_prefix: <<parameters.values_file_prefix>>
       repository_name: <<parameters.repository_name>>
-  - inject_slack_templates
+  - inject_slack_templates:
+      service_name: <<parameters.kube_service_name>>
   - slack/notify:
       event: fail
       template: basic_fail_1
