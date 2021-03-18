@@ -1,7 +1,15 @@
 description: >
   Runs Unit Tests
 
-executor: default
+executor:
+  name: default
+  tag: <<parameters.builder_image_tag>>
+
+parameters:
+  builder_image_tag:
+    default: '3.1'
+    description: Tag of builder image
+    type: string
 
 steps:
   - checkout
