@@ -1,7 +1,8 @@
 description: >
   Runs Solution Build
 
-executor: default
+executor: 
+  name: default
   tag: <<parameters.builder_image_tag>>
 
 parameters:
