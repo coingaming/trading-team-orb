@@ -10,7 +10,7 @@ parameters:
     description: Path to csproj file relative to project root
     type: string
   builder_image_tag:
-    default: 3.1
+    default: '3.1'
     description: Tag of builder image
     type: string
 
