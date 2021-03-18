@@ -1,17 +1,11 @@
 description: >
   Runs Solution Build
 
-executor:
-  name: default
-  tag: <<parameters.builder_image_tag>>
+executor: default
 
 parameters:
   solution_path:
     description: Path to csproj file relative to project root
-    type: string
-  builder_image_tag:
-    default: '3.1'
-    description: Tag of builder image
     type: string
 
 steps:
