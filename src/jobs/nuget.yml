@@ -1,7 +1,9 @@
 description: >
   Pack NuGets
 
-executor: default
+executor:
+  name: default
+  tag: <<parameters.builder_image_tag>>
 
 parameters:
   namespaces:
@@ -12,6 +14,10 @@ parameters:
     type: string
   pipeline_id:
     type: integer
+  builder_image_tag:
+    default: '3.1'
+    description: Tag of builder image
+    type: string
 
 steps:
   - checkout
