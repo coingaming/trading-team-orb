@@ -3,4 +3,4 @@ description: >
 steps:
   - run:
       name: "Pushing Nugets"
-      command: dotnet nuget push /app/nupkgs/ --source "nuget/Main"
+      command: dotnet nuget push /app/nupkgs/ --source "nuget/Main" --skip-duplicate
