@@ -13,7 +13,7 @@ steps:
   - run:
       name: "Running Helm Upgrade"
       command: |
-        export CLUSTER_ENV_NAME=dev
+        export CLUSTER_ENV_NAME=eu-dev
         export HELM_NAMESPACE=trading
         if [ "$CIRCLE_BRANCH" = "release" ]; then
           export CLUSTER_ENV_NAME=prod
