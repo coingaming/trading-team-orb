@@ -11,7 +11,6 @@ steps:
       command: |
         apt-get update && apt-get install -y openjdk-11-jdk
         dotnet tool install --global dotnet-sonarscanner
-        dotnet tool install --global coverlet.console
         export PATH="$PATH:/root/.dotnet/tools"
         dotnet sonarscanner begin /k:"<<parameters.sonarscanner_project_key>>" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=https://sonarcloud.io /o:"coingaming" /d:sonar.verbose=true
         dotnet build
