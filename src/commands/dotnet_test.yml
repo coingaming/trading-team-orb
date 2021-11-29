@@ -9,7 +9,7 @@ steps:
   - run:
       name: "Running tests"
       command: |
-        apt-get update && apt-get install libunwind8 libxml2
+        apt-get update && apt-get install libunwind8 libxml2 -y
         dotnet sonarscanner begin /k:"<<parameters.sonarscanner_project_key>>" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=https://sonarcloud.io /o:"coingaming" /d:sonar.verbose=true
         dotnet test --collect "CodeCoverage" --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SplitCoverage="True"
         dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
