@@ -16,4 +16,5 @@ parameters:
 
 steps:
   - checkout
-  - dotnet_test
+  - dotnet_test:
+      sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
