@@ -10,7 +10,11 @@ parameters:
     default: '3.1'
     description: Tag of builder image
     type: string
+  sonarscanner_project_key:
+    description: Project Key For SonarScanner
+    type: string
 
 steps:
   - checkout
-  - dotnet_test
+  - dotnet_test:
+      sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
