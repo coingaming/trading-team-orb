@@ -3,14 +3,10 @@ description: >
 parameters:
   solution_path:
     type: string
-  sonarscanner_project_key:
-    type: string
 steps:
   - run:
       name: "Building solution"
       command: |
-        dotnet sonarscanner begin /k:"<<parameters.sonarscanner_project_key>>" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=https://sonarcloud.io /o:"coingaming" /d:sonar.verbose=true
         dotnet build
-        dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
         dotnet publish <<parameters.solution_path>> -c Release -o app/out
         rm -rf build
