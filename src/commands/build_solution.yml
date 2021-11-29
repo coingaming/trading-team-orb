@@ -3,8 +3,6 @@ description: >
 parameters:
   solution_path:
     type: string
-  sonarscanner_project_key:
-    type: string
 steps:
   - run:
       name: "Building solution"
