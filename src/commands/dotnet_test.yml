@@ -11,7 +11,7 @@ steps:
       command: |
         apt-get update && apt-get install libunwind8 libxml2 -y
         dotnet tool install --global coverlet.console
-        dotnet sonarscanner begin /k:"<<parameters.sonarscanner_project_key>>" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=https://sonarcloud.io /o:"coingaming" /d:sonar.verbose=true
+        dotnet sonarscanner begin /k:"<<parameters.sonarscanner_project_key>>" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=https://sonarcloud.io /o:"coingaming" /d:sonar.verbose=true /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
         dotnet build
         dotnet test --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SplitCoverage="True" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
