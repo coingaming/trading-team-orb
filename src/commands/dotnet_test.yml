@@ -1,6 +1,14 @@
 description: >
   Run dotnet test
+
+parameters:
+  sonarscanner_project_key:
+    type: string
+
 steps:
   - run:
       name: "Running tests"
-      command: dotnet test
+      command: |
+        dotnet sonarscanner begin /k:"<<parameters.sonarscanner_project_key>>" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=https://sonarcloud.io /o:"coingaming" /d:sonar.verbose=true
+        dotnet test
+        dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
