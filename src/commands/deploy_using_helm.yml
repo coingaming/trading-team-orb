@@ -17,7 +17,7 @@ steps:
         export HELM_NAMESPACE=trading
         if [ "$CIRCLE_BRANCH" = "release" ]; then
           export CLUSTER_ENV_NAME=$PROD_CLUSTER_NAME
-          export HELM_NAMESPACE=trading-prod
+          export HELM_NAMESPACE=trading-$CLUSTER_ENV_NAME
         fi
         mv trading-circleci-notifications/helm .
         cp helm_templates/<< parameters.values_file_prefix >>-$CLUSTER_ENV_NAME.yaml helm/values.yaml
