@@ -20,6 +20,7 @@ steps:
           export CLUSTER_ENV_NAME=$STAGING_CLUSTER_NAME
           export CLUSTER_VALUES_NAME=$STAGING_CLUSTER_VALUES_NAME
           export HELM_NAMESPACE=trading-stage
+        fi
         if [ "$CIRCLE_BRANCH" = "release" ]; then
           export CLUSTER_VALUES_NAME=$PROD_CLUSTER_VALUES_NAME
           export CLUSTER_ENV_NAME=$PROD_CLUSTER_NAME
