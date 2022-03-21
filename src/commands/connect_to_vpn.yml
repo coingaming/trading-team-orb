@@ -9,7 +9,6 @@ steps:
         if [ "$CIRCLE_BRANCH" = "release" ]; then
           export K8S_ENDPOINT=$PROD_K8S_ENDPOINT
         fi
-        
         sudo mkdir /root/.ssh
         sudo -- sh -c "ssh-keyscan -H vpn.trading.io >> /root/.ssh/known_hosts"
         echo $SSH_KEY_PROD | base64 --decode > ssh_key
