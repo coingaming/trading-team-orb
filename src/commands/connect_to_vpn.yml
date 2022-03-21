@@ -5,11 +5,14 @@ steps:
   - run:
       name: Open ssh tunnel
       command: |
+        export K8S_ENDPOINT=$DEV_K8S_ENDPOINT
         if [ "$CIRCLE_BRANCH" = "release" ]; then
-          sudo mkdir /root/.ssh
-          sudo -- sh -c "ssh-keyscan -H vpn.trading.io >> /root/.ssh/known_hosts"
-          echo $SSH_KEY_PROD | base64 --decode > ssh_key
-          chmod 400 ssh_key
-          sudo ssh -i ssh_key -4 -L 443:$PROD_K8S_ENDPOINT:443 -Nf ubuntu@vpn.trading.io
-          sudo -- sh -c "echo '127.0.0.1   $PROD_K8S_ENDPOINT' >> /etc/hosts"
+          export K8S_ENDPOINT=$PROD_K8S_ENDPOINT
         fi
+        
+        sudo mkdir /root/.ssh
+        sudo -- sh -c "ssh-keyscan -H vpn.trading.io >> /root/.ssh/known_hosts"
+        echo $SSH_KEY_PROD | base64 --decode > ssh_key
+        chmod 400 ssh_key
+        sudo ssh -i ssh_key -4 -L 443:$K8S_ENDPOINT:443 -Nf ubuntu@vpn.trading.io
+        sudo -- sh -c "echo '127.0.0.1   $K8S_ENDPOINT' >> /etc/hosts"
