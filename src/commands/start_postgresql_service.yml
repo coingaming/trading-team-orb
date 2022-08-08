@@ -3,4 +3,4 @@ description: >
 steps:
   - run:
       name: "Start Postgre SQL service"
-      command: service postgresql.service start
+      command: service postgresql start
