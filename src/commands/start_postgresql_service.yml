@@ -1,0 +1,6 @@
+description: >
+  Starts Postgre SQL service
+steps:
+  - run:
+      name: "Start Postgre SQL service"
+      command: systemctl start postgresql.service

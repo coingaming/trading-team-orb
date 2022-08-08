@@ -1,0 +1,21 @@
+description: >
+  Runs Unit Tests
+
+executor:
+  name: default
+  tag: <<parameters.builder_image_tag>>
+
+parameters:
+  builder_image_tag:
+    default: '5.0-db'
+    description: Tag of builder image
+    type: string
+  sonarscanner_project_key:
+    description: Project Key For SonarScanner
+    type: string
+
+steps:
+  - start_postgresql_service
+  - checkout
+  - dotnet_test:
+      sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
