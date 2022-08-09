@@ -3,4 +3,9 @@ description: >
 steps:
   - run:
       name: "Start Postgre SQL service"
-      command: service postgresql start
+      command: |
+        service postgresql start
+        psql -U postgres
+        postgres=# CREATE USER test PASSWORD test;
+        postgres=# ALTER USER test WITH SUPERUSER;
+        postgres=# \q
