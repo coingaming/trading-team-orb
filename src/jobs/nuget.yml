@@ -30,7 +30,9 @@ steps:
   - inject_slack_templates
   - slack/notify:
       event: fail
-      template: basic_fail_1
+      template: BUILD_FAILED_TEMPLATE
+      channel: tradeart-circleci-notifications
   - slack/notify:
-      template: NUGET_SUCCESS_TEMPLATE
       event: pass
+      template: NUGET_SUCCESS_TEMPLATE
+      channel: tradeart-circleci-notifications

@@ -19,3 +19,8 @@ steps:
   - checkout
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
+  - inject_slack_templates
+  - slack/notify:
+      event: fail
+      template: BUILD_FAILED_TEMPLATE
+      channel: tradeart-circleci-notifications

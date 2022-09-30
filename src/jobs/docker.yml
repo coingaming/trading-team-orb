@@ -32,8 +32,5 @@ steps:
   - inject_slack_templates
   - slack/notify:
       event: fail
-      template: basic_fail_1
-  - slack/notify:
-      template: DOCKER_SUCCESS_TEMPLATE
-      event: pass
-      branch_pattern: develop
+      template: DOCKER_FAILED_TEMPLATE
+      channel: tradeart-circleci-notifications
