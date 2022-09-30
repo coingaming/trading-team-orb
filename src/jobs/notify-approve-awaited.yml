@@ -1,0 +1,18 @@
+description: >
+  Notifies developer that job is waiting for approval
+
+executor:
+  name: default
+  tag: <<parameters.builder_image_tag>>
+
+parameters:
+  builder_image_tag:
+    default: '3.1'
+    description: Tag of builder image
+    type: string
+
+steps:
+  - inject_slack_templates
+  - slack/notify:
+      template: WAITING_APPROVE_TEMPLATE
+      channel: tradeart-circleci-notifications
