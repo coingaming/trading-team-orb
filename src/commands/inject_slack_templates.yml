@@ -25,3 +25,9 @@ steps:
         echo 'export DEPLOY_FAILED_TEMPLATE=$(<trading-circleci-notifications/slack_templates/deploy_failed.json)' >> $BASH_ENV
         echo 'export DOCKER_FAILED_TEMPLATE=$(<trading-circleci-notifications/slack_templates/docker_failed.json)' >> $BASH_ENV
         echo 'export COMMIT_MESSAGE=$(git log --format="%s" -n 1 $CIRCLE_SHA1)' >> $BASH_ENV
+        export SLACK_TAG=$(cat trading-circleci-notifications/users_map.json | jq -r ".$CIRCLE_USERNAME")
+        if [ "$SLACK_TAG" = "" ]; then
+          export SLACK_TAG="-"
+        fi
+        export SET_SLACK_TAG_COMMAND="export SLACK_TAG=$SLACK_TAG"
+        echo $SET_SLACK_TAG_COMMAND >> $BASH_ENV
