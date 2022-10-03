@@ -12,6 +12,8 @@ parameters:
     type: string
 
 steps:
+  - attach_workspace:
+      at: ./
   - inject_slack_templates
   - slack/notify:
       template: WAITING_APPROVE_TEMPLATE
