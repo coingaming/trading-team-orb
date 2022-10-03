@@ -33,3 +33,14 @@ steps:
         echo "Detected user tag: $SLACK_TAG"
         export SET_SLACK_TAG_COMMAND="export SLACK_TAG='$SLACK_TAG'"
         echo $SET_SLACK_TAG_COMMAND >> $BASH_ENV
+        export ENV_NAME="None"
+        if [ "$CIRCLE_BRANCH" = "master" ]; then
+          export ENV_NAME="DEV"
+        if [ "$CIRCLE_BRANCH" = "staging" ]; then
+          export ENV_NAME="STAGE"
+        fi
+        if [ "$CIRCLE_BRANCH" = "release" ]; then
+          export ENV_NAME="PROD"
+        fi
+        export SET_ENV_NAME_COMMAND="export ENV_NAME='$ENV_NAME'"
+        echo $SET_ENV_NAME_COMMAND >> $BASH_ENV
