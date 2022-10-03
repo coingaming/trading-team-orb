@@ -8,6 +8,7 @@ parameters:
 steps:
   - run:
       name: "Setting up variables"
+      when: always
       command: |
         echo 'export VERSION_PREFIX=<<parameters.base_version>>.<< parameters.pipeline_id >>' >> $BASH_ENV
         echo 'if [ $CIRCLE_BRANCH != "master" ]; then export VERSION_SUFFIX=$CIRCLE_BRANCH; fi' >> $BASH_ENV

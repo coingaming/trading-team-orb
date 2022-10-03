@@ -32,7 +32,9 @@ steps:
       service_name: <<parameters.kube_service_name>>
   - slack/notify:
       event: fail
-      template: basic_fail_1
+      template: DEPLOY_FAILED_TEMPLATE
+      channel: tradeart-circleci-notifications
   - slack/notify:
-      template: HELM_SUCCESS_TEMPLATE
       event: pass
+      template: DEPLOY_SUCCESS_TEMPLATE
+      channel: tradeart-circleci-notifications

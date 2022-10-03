@@ -8,6 +8,7 @@ parameters:
 steps:
   - run:
       name: "Injecting slack templates"
+      when: always
       command: |
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
@@ -18,7 +19,17 @@ steps:
         rm -rf trading-circleci-notifications
         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone git@github.com:coingaming/trading-circleci-notifications.git
         echo 'export DEPLOYMENT_SERVICE_NAME=<<parameters.service_name>>' >> $BASH_ENV
-        echo 'export NUGET_SUCCESS_TEMPLATE=$(<trading-circleci-notifications/nuget_success.json)' >> $BASH_ENV
-        echo 'export DOCKER_SUCCESS_TEMPLATE=$(<trading-circleci-notifications/docker_success.json)' >> $BASH_ENV
-        echo 'export HELM_SUCCESS_TEMPLATE=$(<trading-circleci-notifications/deploy_success.json)' >> $BASH_ENV
+        echo 'export NUGET_SUCCESS_TEMPLATE=$(<trading-circleci-notifications/slack_templates/nuget_success.json)' >> $BASH_ENV
+        echo 'export DEPLOY_SUCCESS_TEMPLATE=$(<trading-circleci-notifications/slack_templates/deploy_success.json)' >> $BASH_ENV
+        echo 'export BUILD_FAILED_TEMPLATE=$(<trading-circleci-notifications/slack_templates/build_failed.json)' >> $BASH_ENV
+        echo 'export DEPLOY_FAILED_TEMPLATE=$(<trading-circleci-notifications/slack_templates/deploy_failed.json)' >> $BASH_ENV
+        echo 'export DOCKER_FAILED_TEMPLATE=$(<trading-circleci-notifications/slack_templates/docker_failed.json)' >> $BASH_ENV
+        echo 'export WAITING_APPROVE_TEMPLATE=$(<trading-circleci-notifications/slack_templates/waiting_approve.json)' >> $BASH_ENV
         echo 'export COMMIT_MESSAGE=$(git log --format="%s" -n 1 $CIRCLE_SHA1)' >> $BASH_ENV
+        export SLACK_TAG=$(cat trading-circleci-notifications/users_map.json | jq -r ".$CIRCLE_USERNAME")
+        if [ "$SLACK_TAG" = "" ]; then
+          export SLACK_TAG="$CIRCLE_USERNAME"
+        fi
+        echo "Detected user tag: $SLACK_TAG"
+        export SET_SLACK_TAG_COMMAND="export SLACK_TAG='$SLACK_TAG'"
+        echo $SET_SLACK_TAG_COMMAND >> $BASH_ENV
