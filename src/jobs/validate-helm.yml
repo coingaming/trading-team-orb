@@ -1,0 +1,31 @@
+description: >
+  Validate helm template
+
+executor: docker-builder
+
+parameters:
+  base_version:
+    description: Base version
+    type: string
+  pipeline_id:
+    type: integer
+  kube_service_name:
+    type: string
+  values_file_prefix:
+    type: string
+    default: values
+
+steps:
+  - checkout
+  - checkout_common_project
+  - inject_version_data:
+      base_version: <<parameters.base_version>>
+      pipeline_id: << parameters.pipeline_id >>
+  - lint_helm:
+      values_file_prefix: <<parameters.values_file_prefix>>
+  - inject_slack_templates:
+      service_name: <<parameters.kube_service_name>>
+  - slack/notify:
+      event: fail
+      template: BUILD_FAILED_TEMPLATE
+      channel: tradeart-circleci-notifications

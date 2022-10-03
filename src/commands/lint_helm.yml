@@ -1,0 +1,27 @@
+description: >
+  Lint Helm Template
+
+parameters:
+  values_file_prefix:
+    type: string
+    default: values
+steps:
+  - run:
+      name: "Running Helm Lint"
+      command: |
+        export CLUSTER_ENV_NAME=$DEV_CLUSTER_NAME
+        export CLUSTER_VALUES_NAME=$DEV_CLUSTER_VALUES_NAME
+        export HELM_NAMESPACE=trading
+        if [ "$CIRCLE_BRANCH" = "staging" ]; then
+          export CLUSTER_ENV_NAME=$STAGING_CLUSTER_NAME
+          export CLUSTER_VALUES_NAME=$STAGING_CLUSTER_VALUES_NAME
+          export HELM_NAMESPACE=trading-stage
+        fi
+        if [ "$CIRCLE_BRANCH" = "release" ]; then
+          export CLUSTER_VALUES_NAME=$PROD_CLUSTER_VALUES_NAME
+          export CLUSTER_ENV_NAME=$PROD_CLUSTER_NAME
+          export HELM_NAMESPACE=trading-prod
+        fi
+        mv trading-circleci-notifications/helm .
+        cp helm_templates/<< parameters.values_file_prefix >>-$CLUSTER_VALUES_NAME.yaml helm/values.yaml
+        helm lint ./helm -f values.yaml  --debug
