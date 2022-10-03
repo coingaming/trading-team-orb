@@ -30,5 +30,6 @@ steps:
         if [ "$SLACK_TAG" = "" ]; then
           export SLACK_TAG="$CIRCLE_USERNAME"
         fi
+        echo "Detected user tag: $SLACK_TAG"
         export SET_SLACK_TAG_COMMAND="export SLACK_TAG=$SLACK_TAG"
         echo $SET_SLACK_TAG_COMMAND >> $BASH_ENV
