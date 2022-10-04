@@ -17,7 +17,6 @@ parameters:
 
 steps:
   - checkout
-  - checkout_common_project
   - inject_version_data:
       base_version: <<parameters.base_version>>
       pipeline_id: << parameters.pipeline_id >>
