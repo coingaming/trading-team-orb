@@ -30,9 +30,14 @@ steps:
         export CIRCLE_USERNAME_ESCAPED=${CIRCLE_USERNAME_ESCAPED/"-"/"_"}
         export CIRCLE_USERNAME_ESCAPED=${CIRCLE_USERNAME_ESCAPED/" "/"_"}
         export SLACK_TAG=$(cat trading-circleci-notifications/users_map.json | jq -r ".$CIRCLE_USERNAME_ESCAPED")
+        if [ "$SLACK_TAG" = "null" ]; then
+          export SLACK_TAG="$CIRCLE_USERNAME"
+        fi
         if [ "$SLACK_TAG" = "" ]; then
           export SLACK_TAG="$CIRCLE_USERNAME"
         fi
+        echo "Circle CI user: $CIRCLE_USERNAME"
+        echo "User name escaped: $CIRCLE_USERNAME_ESCAPED"
         echo "Detected user tag: $SLACK_TAG"
         export SET_SLACK_TAG_COMMAND="export SLACK_TAG='$SLACK_TAG'"
         echo $SET_SLACK_TAG_COMMAND >> $BASH_ENV
