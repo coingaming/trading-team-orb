@@ -29,7 +29,7 @@ steps:
         export CIRCLE_USERNAME_ESCAPED=$CIRCLE_USERNAME
         export CIRCLE_USERNAME_ESCAPED=${CIRCLE_USERNAME_ESCAPED/"-"/"_"}
         export CIRCLE_USERNAME_ESCAPED=${CIRCLE_USERNAME_ESCAPED/" "/"_"}
-        export SLACK_TAG=$(cat trading-circleci-notifications/users_map.json | jq -r ".$CIRCLE_USERNAME_ESCAPED")
+        export SLACK_TAG=$(cat trading-circleci-notifications/users_map.json | jq -r .\"$CIRCLE_USERNAME_ESCAPED\")
         if [ "$SLACK_TAG" = "null" ]; then
           export SLACK_TAG="$CIRCLE_USERNAME"
         fi
