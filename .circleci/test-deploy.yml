@@ -15,7 +15,9 @@ filters: &filters
 # Filter for release tags.
 release-filters: &release-filters
   branches:
-    only: release
+    ignore: /.*/
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 jobs:
   # Create jobs to test the commands of your orbs.
