@@ -48,5 +48,6 @@ workflows:
           requires:
             - orb-tools/pack
             - command-test
-          context: trading
+          context: global
+          circleci_token: CIRCLE_CI_API_KEY
           filters: *release-filters
