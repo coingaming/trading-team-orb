@@ -21,8 +21,10 @@ workflows:
       - shellcheck/check:
           filters: *filters
       - orb-tools/publish:
+          name: DEV publish
           orb_name: coingaming/trading-team-orb
           vcs_type: << pipeline.project.type >>
+          pub_type: dev
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
           # Use a context to hold your publishing token.
@@ -33,5 +35,6 @@ workflows:
           pipeline_number: << pipeline.number >>
           vcs_type: << pipeline.project.type >>
           orb_name: trading-team-orb
-          requires: [orb-tools/publish]
+          requires:
+            - DEV publish
           filters: *filters

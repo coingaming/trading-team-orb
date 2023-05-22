@@ -38,6 +38,7 @@ workflows:
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
+          name: PROD publish
           orb_name: coingaming/trading-team-orb
           vcs_type: << pipeline.project.type >>
           pub_type: production
