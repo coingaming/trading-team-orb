@@ -15,7 +15,7 @@ filters: &filters
 # Filter for release tags.
 release-filters: &release-filters
   branches:
-    only: master
+    ignore: /.*/
   tags:
     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
