@@ -19,5 +19,8 @@ steps:
       when: always
       command: |
         trx2junit ./**/TestResults/*.trx  --output ./tests/TestResults
+  - store_artifacts:
+      path: tests/TestResults
+      destination: TestResults
   - store_test_results:
       path: tests/TestResults
