@@ -18,6 +18,9 @@ steps:
       name: "Convert test results"
       when: always
       command: |
+        find -regex ".*\/TestResults\/.+\.trx$" -not -type d
+        mkdir tests
+        mkdir tests/TestResultsRaw/
         find -regex ".*\/TestResults\/.+\.trx$" -not -type d -exec cp "{}" ./tests/TestResultsRaw/ ";"
         trx2junit ./tests/TestResultsRaw/*.trx  --output ./tests/TestResults
   - store_test_results:
