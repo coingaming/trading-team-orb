@@ -18,6 +18,7 @@ steps:
       name: "Convert test results"
       when: always
       command: |
-        trx2junit ./**/TestResults/*.trx  --output ./tests/TestResults
+        find ./**/TestResults/*.trx -not -type d -exec cp "{}" ./tests/TestResultsRaw/ ";"
+        trx2junit ./tests/TestResultsRaw/*.trx  --output ./tests/TestResults
   - store_test_results:
       path: tests/TestResults
