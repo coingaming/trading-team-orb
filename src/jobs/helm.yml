@@ -18,8 +18,8 @@ parameters:
     type: string
   helm_timeout:
     description: Timeout for helm upgrade operation.
-    type: integer
-    default: 300
+    type: string
+    default: 5m0s
 
 steps:
   - checkout
