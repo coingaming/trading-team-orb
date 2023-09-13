@@ -16,6 +16,10 @@ parameters:
     default: values
   repository_name:
     type: string
+  helm_timeout:
+    description: Timeout for helm upgrade operation.
+    type: string
+    default: 5m0s
 
 steps:
   - checkout
@@ -28,6 +32,7 @@ steps:
       kube_service_name: <<parameters.kube_service_name>>
       values_file_prefix: <<parameters.values_file_prefix>>
       repository_name: <<parameters.repository_name>>
+      helm_timeout: <<parameters.helm_timeout>>
   - inject_slack_templates:
       service_name: <<parameters.kube_service_name>>
   - slack/notify:
