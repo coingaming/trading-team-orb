@@ -27,8 +27,8 @@ steps:
         echo 'export WAITING_APPROVE_TEMPLATE=$(<trading-circleci-notifications/slack_templates/waiting_approve.json)' >> $BASH_ENV
         echo 'export COMMIT_MESSAGE=$(git log --format="%s" -n 1 $CIRCLE_SHA1)' >> $BASH_ENV
         export CIRCLE_USERNAME_ESCAPED=$CIRCLE_USERNAME
-        export CIRCLE_USERNAME_ESCAPED=${CIRCLE_USERNAME_ESCAPED/"-"/"_"}
-        export CIRCLE_USERNAME_ESCAPED=${CIRCLE_USERNAME_ESCAPED/" "/"_"}
+        export CIRCLE_USERNAME_ESCAPED=${CIRCLE_USERNAME_ESCAPED//"-"/"_"}
+        export CIRCLE_USERNAME_ESCAPED=${CIRCLE_USERNAME_ESCAPED//" "/"_"}
         export SLACK_TAG=$(cat trading-circleci-notifications/users_map.json | jq -r .\"$CIRCLE_USERNAME_ESCAPED\")
         if [ "$SLACK_TAG" = "null" ]; then
           export SLACK_TAG="$CIRCLE_USERNAME"
