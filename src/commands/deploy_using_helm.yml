@@ -35,8 +35,8 @@ steps:
           export HELM_NAMESPACE=trading-prod
         fi
 
-        if [ -n "$tenant_id" ]; then
-          export HELM_NAMESPACE="$HELM_NAMESPACE-$tenant_id"
+        if [ << parameters.tenant_id >> != "" ]; then
+          export HELM_NAMESPACE=$HELM_NAMESPACE-<< parameters.tenant_id >>
         fi
 
         mv trading-circleci-notifications/helm .
