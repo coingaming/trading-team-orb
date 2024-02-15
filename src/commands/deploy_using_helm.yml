@@ -24,19 +24,22 @@ steps:
         export CLUSTER_ENV_NAME=$DEV_CLUSTER_NAME
         export CLUSTER_VALUES_NAME=$DEV_CLUSTER_VALUES_NAME
         export HELM_NAMESPACE=trading
+        export TENANT_NAMESPACE=dev
         if [ "$CIRCLE_BRANCH" = "staging" ]; then
+          export TENANT_NAMESPACE=stage
           export CLUSTER_ENV_NAME=$STAGING_CLUSTER_NAME
           export CLUSTER_VALUES_NAME=$STAGING_CLUSTER_VALUES_NAME
           export HELM_NAMESPACE=trading-stage
         fi
         if [ "$CIRCLE_BRANCH" = "release" ]; then
+          export TENANT_NAMESPACE=prod
           export CLUSTER_VALUES_NAME=$PROD_CLUSTER_VALUES_NAME
           export CLUSTER_ENV_NAME=$PROD_CLUSTER_NAME
           export HELM_NAMESPACE=trading-prod
         fi
 
         if [ << parameters.tenant_id >> != "" ]; then
-          export HELM_NAMESPACE=$HELM_NAMESPACE-<< parameters.tenant_id >>
+          export HELM_NAMESPACE=tenant-<< parameters.tenant_id >>-$TENANT_NAMESPACE
         fi
 
         mv trading-circleci-notifications/helm .
