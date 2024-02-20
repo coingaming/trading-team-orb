@@ -1,0 +1,20 @@
+description: >
+  Run dotnet test
+
+steps:
+  - run:
+      name: "Running tests"
+      command: |
+        apt-get update && apt-get install libunwind8 libxml2 -y
+        dotnet build
+        dotnet test --logger "trx" --logger "console;verbosity=detailed" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SplitCoverage="True" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+  - run:
+      name: "Convert test results"
+      when: always
+      command: |
+        find -regex ".*\/TestResults\/.+\.trx$" -not -type d
+        mkdir -p tests/TestResultsRaw/
+        find -regex ".*\/TestResults\/.+\.trx$" -not -type d -exec cp "{}" ./tests/TestResultsRaw/ ";"
+        trx2junit ./tests/TestResultsRaw/*.trx  --output ./tests/TestResults
+  - store_test_results:
+      path: tests/TestResults
