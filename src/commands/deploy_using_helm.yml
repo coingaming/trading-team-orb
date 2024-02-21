@@ -39,7 +39,7 @@ steps:
         fi
 
         if [ << parameters.tenant_id >> != "" ]; then
-          export HELM_NAMESPACE=tenant-<< parameters.tenant_id >>-$TENANT_NAMESPACE
+          export HELM_NAMESPACE=tenant-<<parameters.tenant_id>>-$TENANT_NAMESPACE
         fi
 
         mv trading-circleci-notifications/helm .
