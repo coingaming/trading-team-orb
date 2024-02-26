@@ -15,7 +15,7 @@ parameters:
     type: string
 
 steps:
-  - checkout
+  - blobless_checkout
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
   - inject_slack_templates

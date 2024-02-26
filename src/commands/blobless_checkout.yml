@@ -1,0 +1,7 @@
+description: >
+  Checkout repository
+
+steps:
+  - run:
+      command: |
+        git clone --filter=blob:none -b "$CIRCLE_BRANCH" "$CIRCLE_REPOSITORY_URL"
