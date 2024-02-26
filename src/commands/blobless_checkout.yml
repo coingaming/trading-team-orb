@@ -5,4 +5,6 @@ steps:
   - run:
       name: Checkout
       command: |
+        mkdir -p /root/.ssh
+        ssh-keyscan -p 443 ssh.github.com >> ~/.ssh/known_hosts
         git clone --filter=blob:none -b "$CIRCLE_BRANCH" "git@github.com:coingaming/$CIRCLE_PROJECT_REPONAME.git"
