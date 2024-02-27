@@ -16,6 +16,7 @@ parameters:
 
 steps:
   - git-shallow-clone/checkout_advanced
+      name: Checkout blobless
       clone_options: "--filter=blob:none"
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
