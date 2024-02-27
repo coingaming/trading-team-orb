@@ -16,7 +16,8 @@ parameters:
 
 steps:
   - start_postgresql_service
-  - checkout
+  - git-shallow-clone/checkout_advanced:
+      clone_options: '--filter=blob:none'
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
   - inject_slack_templates
