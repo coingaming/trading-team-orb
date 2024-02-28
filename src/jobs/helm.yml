@@ -20,7 +20,9 @@ parameters:
     description: Timeout for helm upgrade operation.
     type: string
     default: 5m0s
-
+  tenant_id:
+    type: string
+    default: ""
 steps:
   - checkout
   - checkout_common_project
@@ -33,6 +35,7 @@ steps:
       values_file_prefix: <<parameters.values_file_prefix>>
       repository_name: <<parameters.repository_name>>
       helm_timeout: <<parameters.helm_timeout>>
+      tenant_id: <<parameters.tenant_id>>
   - inject_slack_templates:
       service_name: <<parameters.kube_service_name>>
   - slack/notify:
