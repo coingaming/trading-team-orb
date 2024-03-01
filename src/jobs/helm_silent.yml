@@ -36,13 +36,3 @@ steps:
       repository_name: <<parameters.repository_name>>
       helm_timeout: <<parameters.helm_timeout>>
       tenant_id: <<parameters.tenant_id>>
-  - inject_slack_templates:
-      service_name: <<parameters.kube_service_name>>
-  - slack/notify:
-      event: fail
-      template: DEPLOY_FAILED_TEMPLATE
-      channel: tradeart-circleci-notifications
-  - slack/notify:
-      event: pass
-      template: DEPLOY_SUCCESS_TEMPLATE
-      channel: tradeart-circleci-notifications
