@@ -38,6 +38,7 @@ steps:
       tenant_id: <<parameters.tenant_id>>
   - inject_slack_templates:
       service_name: <<parameters.kube_service_name>>
+      tenant_id: <<parameters.tenant_id>>
   - slack/notify:
       event: fail
       template: DEPLOY_FAILED_TEMPLATE

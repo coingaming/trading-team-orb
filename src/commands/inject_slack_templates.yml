@@ -5,6 +5,9 @@ parameters:
   service_name:
     type: string
     default: ""
+  tenant_id:
+    type: string
+    default: ""
 steps:
   - run:
       name: "Injecting slack templates"
@@ -42,7 +45,7 @@ steps:
         export SET_SLACK_TAG_COMMAND="export SLACK_TAG='$SLACK_TAG'"
         echo $SET_SLACK_TAG_COMMAND >> $BASH_ENV
         export ENV_NAME="None"
-        if [ "$CIRCLE_BRANCH" = "master" ]; then
+        if [ "$CIRCLE_BRANCH" = "master" || << parameters.tenant_id >> != ""]; then
           export ENV_NAME="DEV"
         fi
         if [ "$CIRCLE_BRANCH" = "staging" ]; then
