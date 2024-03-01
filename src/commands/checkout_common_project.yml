@@ -10,4 +10,8 @@ steps:
         echo '-----END OPENSSH PRIVATE KEY-----' >> ~/.ssh/id_rsa_1
         ssh-add -D
         chmod 600 ~/.ssh/id_rsa_1
-        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone -b $CIRCLE_BRANCH git@github.com:coingaming/trading-circleci-notifications.git
+        export BRANCH=$CIRCLE_BRANCH
+        if [ "$CIRCLE_BRANCH" != "master" || "$CIRCLE_BRANCH" != "staging" || "$CIRCLE_BRANCH" != release ]; then
+          export BRANCH=master
+        fi
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone -b $BRANCH git@github.com:coingaming/trading-circleci-notifications.git
