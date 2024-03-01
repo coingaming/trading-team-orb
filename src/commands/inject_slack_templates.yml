@@ -42,7 +42,7 @@ steps:
         export SET_SLACK_TAG_COMMAND="export SLACK_TAG='$SLACK_TAG'"
         echo $SET_SLACK_TAG_COMMAND >> $BASH_ENV
         export ENV_NAME="None"
-        if [ "$CIRCLE_BRANCH" = "master"]; then
+        if [ "$CIRCLE_BRANCH" = "master" ]; then
           export ENV_NAME="DEV"
         fi
         if [ "$CIRCLE_BRANCH" = "staging" ]; then
