@@ -2,7 +2,7 @@ description: >
   Lint Tenant Helm Template
 
 parameters:
-  kube_service_name:
+  service_name:
     type: string
   values_file_prefix:
     type: string
@@ -32,5 +32,5 @@ steps:
         chmod 600 ~/.ssh/id_rsa_1
         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone -b $COMMON_PROJECT_BRANCH git@github.com:coingaming/trading-circleci-notifications.git
         mv trading-circleci-notifications/helm .
-        cp tradeart-terraform/terraform/clients/pool1/tenant-<<parameters.tenant_id>>/<< parameters.values_file_prefix >>-$CLUSTER_VALUES_NAME-<<parameters.kube_service_name>>.yaml helm/values.yaml
+        cp tradeart-terraform/terraform/clients/pool1/tenant-<<parameters.tenant_id>>/<< parameters.values_file_prefix >>-$CLUSTER_VALUES_NAME-<<parameters.service_name>>.yaml helm/values.yaml
         helm lint ./helm --debug

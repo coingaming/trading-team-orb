@@ -1,5 +1,5 @@
 description: >
-  Validate helm template
+  Validate helm template for tenant
 
 executor: docker-builder
 
