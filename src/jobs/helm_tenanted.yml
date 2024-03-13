@@ -1,5 +1,5 @@
 description: >
-  Deploy to EKS
+  Deploy to EKS tenant env
 
 executor: docker-builder
 
@@ -26,13 +26,24 @@ parameters:
 steps:
   - checkout
   - checkout_common_project
+  - checkout_terraform_project
   - inject_version_data:
       base_version: <<parameters.base_version>>
       pipeline_id: << parameters.pipeline_id >>
   - connect_to_vpn
-  - deploy_using_helm:
+  - deploy_using_helm_tenanted:
       kube_service_name: <<parameters.kube_service_name>>
       values_file_prefix: <<parameters.values_file_prefix>>
       repository_name: <<parameters.repository_name>>
       helm_timeout: <<parameters.helm_timeout>>
       tenant_id: <<parameters.tenant_id>>
+  - inject_slack_templates:
+      service_name: <<parameters.kube_service_name>>
+  - slack/notify:
+      event: fail
+      template: DEPLOY_FAILED_TEMPLATE
+      channel: tradeart-circleci-notifications
+  - slack/notify:
+      event: pass
+      template: DEPLOY_SUCCESS_TEMPLATE
+      channel: tradeart-circleci-notifications
