@@ -1,5 +1,5 @@
 description: >
-  Checking out terraform values 
+  Checking out terraform values
 steps:
   - run:
       name: "Injecting tenant helm values"
