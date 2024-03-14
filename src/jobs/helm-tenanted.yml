@@ -24,7 +24,6 @@ parameters:
     type: string
     default: ""
 steps:
-  - checkout
   - checkout_common_project
   - checkout_terraform_project
   - inject_version_data:
