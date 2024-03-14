@@ -4,7 +4,9 @@ steps:
   - run:
       name: "Injecting slack templates"
       command: |
-        # Check if known_hosts file exists, if not create it
+        if [ ! -d ~/.ssh ]; then
+          mkdir -p ~/.ssh
+        fi
         if [ ! -f ~/.ssh/known_hosts ]; then
           touch ~/.ssh/known_hosts
         fi
