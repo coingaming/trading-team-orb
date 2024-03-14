@@ -1,5 +1,5 @@
 description: >
-  Deploy to EKS
+  Validate helm template for tenant
 
 executor: docker-builder
 
@@ -14,31 +14,22 @@ parameters:
   values_file_prefix:
     type: string
     default: values
-  repository_name:
+  tenant_id:
     type: string
-  helm_timeout:
-    description: Timeout for helm upgrade operation.
-    type: string
-    default: 5m0s
+    default: ""
+
 steps:
-  - checkout
-  - checkout_common_project
+  - checkout_terraform_project
   - inject_version_data:
       base_version: <<parameters.base_version>>
       pipeline_id: << parameters.pipeline_id >>
-  - connect_to_vpn
-  - deploy_using_helm:
-      kube_service_name: <<parameters.kube_service_name>>
+  - lint_helm_tenanted:
       values_file_prefix: <<parameters.values_file_prefix>>
-      repository_name: <<parameters.repository_name>>
-      helm_timeout: <<parameters.helm_timeout>>
+      tenant_id: <<parameters.tenant_id>>
+      service_name: <<parameters.kube_service_name>>
   - inject_slack_templates:
       service_name: <<parameters.kube_service_name>>
   - slack/notify:
       event: fail
-      template: DEPLOY_FAILED_TEMPLATE
-      channel: tradeart-circleci-notifications
-  - slack/notify:
-      event: pass
-      template: DEPLOY_SUCCESS_TEMPLATE
+      template: BUILD_FAILED_TEMPLATE
       channel: tradeart-circleci-notifications

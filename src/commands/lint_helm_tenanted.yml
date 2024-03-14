@@ -1,0 +1,36 @@
+description: >
+  Lint Tenant Helm Template
+
+parameters:
+  service_name:
+    type: string
+  values_file_prefix:
+    type: string
+    default: values
+  tenant_id:
+    type: string
+    default: ""
+steps:
+  - run:
+      name: "Running Helm Lint"
+      command: |
+        export CLUSTER_VALUES_NAME=$DEV_CLUSTER_VALUES_NAME
+        export COMMON_PROJECT_BRANCH="master"
+        if [ "$CIRCLE_BRANCH" = "staging" ]; then
+          export CLUSTER_VALUES_NAME=$STAGING_CLUSTER_VALUES_NAME
+          export COMMON_PROJECT_BRANCH="staging"
+        fi
+        if [ "$CIRCLE_BRANCH" = "release" ]; then
+          export CLUSTER_VALUES_NAME=$PROD_CLUSTER_VALUES_NAME
+          export COMMON_PROJECT_BRANCH="release"
+        fi
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
+        echo $GITHUB_DEPLOY_PRIVATE_KEY >> ~/.ssh/id_rsa_1
+        echo '-----END OPENSSH PRIVATE KEY-----' >> ~/.ssh/id_rsa_1
+        ssh-add -D
+        chmod 600 ~/.ssh/id_rsa_1
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone -b $COMMON_PROJECT_BRANCH git@github.com:coingaming/trading-circleci-notifications.git
+        mv trading-circleci-notifications/helm .
+        cp tradeart-terraform/terraform/clients/pool1/tenant-<<parameters.tenant_id>>/<< parameters.values_file_prefix >>-$CLUSTER_VALUES_NAME-<<parameters.service_name>>.yaml helm/values.yaml
+        helm lint ./helm --debug
