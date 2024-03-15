@@ -45,6 +45,9 @@ steps:
         if [ "$CIRCLE_BRANCH" = "master" ]; then
           export ENV_NAME="DEV"
         fi
+        if [ "$CIRCLE_BRANCH" = "test" ]; then
+          export ENV_NAME="TEST"
+        fi
         if [ "$CIRCLE_BRANCH" = "staging" ]; then
           export ENV_NAME="STAGE"
         fi

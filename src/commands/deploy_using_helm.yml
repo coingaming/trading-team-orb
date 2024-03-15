@@ -21,6 +21,11 @@ steps:
         export CLUSTER_ENV_NAME=$DEV_CLUSTER_NAME
         export CLUSTER_VALUES_NAME=$DEV_CLUSTER_VALUES_NAME
         export HELM_NAMESPACE=trading
+        if [ "$CIRCLE_BRANCH" = "test" ]; then
+          export CLUSTER_ENV_NAME=$DEV_CLUSTER_NAME
+          export CLUSTER_VALUES_NAME=$TEST_CLUSTER_VALUES_NAME
+          export HELM_NAMESPACE=trading-test
+        fi
         if [ "$CIRCLE_BRANCH" = "staging" ]; then
           export CLUSTER_ENV_NAME=$STAGING_CLUSTER_NAME
           export CLUSTER_VALUES_NAME=$STAGING_CLUSTER_VALUES_NAME
