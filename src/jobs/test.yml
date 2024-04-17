@@ -15,8 +15,10 @@ parameters:
     type: string
 
 steps:
-  - git-shallow-clone/checkout_advanced:
-      clone_options: '--filter=blob:none'
+  - checkout
+  - run:
+      name: "git fetch"
+      command: git fetch
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
   - inject_slack_templates
