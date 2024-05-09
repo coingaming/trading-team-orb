@@ -8,5 +8,5 @@ steps:
       name: "Packing Nuget"
       command: |
         for i in <<parameters.namespaces>>; do
-          dotnet pack $i -c Release --output /app/nupkgs -p:VersionSuffix=$VERSION_SUFFIX -p:VersionPrefix=$VERSION_PREFIX
+          dotnet pack $i -c Release --output /app/nupkgs -p:VersionSuffix=$NUGET_VERSION_SUFFIX -p:VersionPrefix=$VERSION_PREFIX
         done
