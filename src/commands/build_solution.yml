@@ -7,6 +7,6 @@ steps:
   - run:
       name: "Building solution"
       command: |
-        dotnet build
+        dotnet build <<parameters.solution_path>>
         dotnet publish <<parameters.solution_path>> -c Release -o app/out
         rm -rf build
