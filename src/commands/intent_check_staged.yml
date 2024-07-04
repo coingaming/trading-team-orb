@@ -9,6 +9,7 @@ steps:
   - run:
       name: "Running SF CLI"
       command: |
+        ls
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
         echo $GITHUB_INTENT_PRIVATE_KEY >> ~/.ssh/id_rsa_1
