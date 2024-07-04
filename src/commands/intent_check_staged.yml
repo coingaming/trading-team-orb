@@ -1,0 +1,20 @@
+description: >
+  Check there are no staged changes in Intent Architect Software Factory.
+
+parameters:
+  path_to_intent:
+    type: string
+    default: 'intent'
+steps:
+  - run:
+      name: "Running SF CLI"
+      command: |
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
+        echo $GITHUB_INTENT_PRIVATE_KEY >> ~/.ssh/id_rsa_1
+        echo '-----END OPENSSH PRIVATE KEY-----' >> ~/.ssh/id_rsa_1
+        ssh-add -D
+        chmod 600 ~/.ssh/id_rsa_1
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone -b build-test git@github.com:coingaming/tradeart-intent-modules.git
+        mv tradeart-intent-modules/modules ./intent_modules
+        intent-cli ensure-no-outstanding-changes "$INTENT_USERNAME" "$INTENT_PASSWORD" "<<parameters.path_to_intent>>"

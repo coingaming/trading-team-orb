@@ -1,0 +1,21 @@
+description: >
+  Check Intent Architect project.
+
+executor:
+  name: intent
+
+parameters:
+  path_to_intent:
+    description: Path to the Intent Architect solution (.isln) file or folder containing a single .isln file.
+    type: string
+    default: 'intent'
+
+steps:
+  - checkout
+  - intent_check_staged:
+      path_to_intent: <<parameters.path_to_intent>>
+  - inject_slack_templates
+  - slack/notify:
+      event: fail
+      template: BUILD_FAILED_TEMPLATE
+      channel: tradeart-circleci-notifications
