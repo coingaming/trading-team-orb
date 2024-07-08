@@ -1,0 +1,4 @@
+description: >
+  Intent Architect check executor
+docker:
+  - image: public.ecr.aws/y7n1s6r0/trading-dev-intent:1.2
