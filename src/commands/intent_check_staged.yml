@@ -18,7 +18,7 @@ steps:
         echo '-----END OPENSSH PRIVATE KEY-----' >> ~/.ssh/id_rsa_1
         ssh-add -D
         chmod 600 ~/.ssh/id_rsa_1
-        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone -b build-test git@github.com:coingaming/tradeart-intent-modules.git
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone -b master git@github.com:coingaming/tradeart-intent-modules.git
         mv tradeart-intent-modules/modules ./intent_modules
         if [ "<<parameters.application_id>>" = "" ]; then
           intent-cli ensure-no-outstanding-changes "$INTENT_USERNAME" "$INTENT_PASSWORD" "<<parameters.path_to_intent>>"
