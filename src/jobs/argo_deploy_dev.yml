@@ -1,0 +1,32 @@
+description: >
+  Deploy with ArgoCD to dev cluster.
+
+executor: docker-builder
+
+parameters:
+  base_version:
+    description: Base version
+    type: string
+  pipeline_id:
+    type: integer
+  repository_name:
+    type: string
+  kube_service_name:
+    type: string
+steps:
+  - checkout_common_project
+  - inject_version_data:
+      base_version: <<parameters.base_version>>
+      pipeline_id: << parameters.pipeline_id >>
+  - update_argo_image_dev:
+      repository_name: <<parameters.repository_name>>
+  - inject_slack_templates:
+      service_name: <<parameters.kube_service_name>>
+  - slack/notify:
+      event: fail
+      template: DEPLOY_FAILED_TEMPLATE
+      channel: tradeart-circleci-notifications
+  - slack/notify:
+      event: pass
+      template: DEPLOY_SUCCESS_TEMPLATE
+      channel: tradeart-circleci-notifications

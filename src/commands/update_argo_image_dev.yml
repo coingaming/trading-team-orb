@@ -1,0 +1,20 @@
+description: >
+  Updates applicatrion image tag in ArgoCD dev repository.
+
+parameters:
+  repository_name:
+    type: string
+steps:
+  - run:
+      name: "Clonning ArgoCD repository"
+      when: always
+      command: |
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
+        echo $DEV_CLUSTER_REPO_KEY >> ~/.ssh/id_rsa_1
+        echo '-----END OPENSSH PRIVATE KEY-----' >> ~/.ssh/id_rsa_1
+        ssh-add -D
+        chmod 600 ~/.ssh/id_rsa_1
+        rm -rf tradeart-tenants
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone git@github.com:coingaming/tradeart-tenants.git
+        ls
