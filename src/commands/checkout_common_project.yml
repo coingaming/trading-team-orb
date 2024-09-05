@@ -20,4 +20,7 @@ steps:
         if [ "$CIRCLE_BRANCH" != "master" ] && [ "$CIRCLE_BRANCH" != "staging" ] && [ "$CIRCLE_BRANCH" != release ]; then
           export BRANCH=master
         fi
+        if [ "$CIRCLE_BRANCH" == "master" ]; then
+          export BRANCH=test
+        fi
         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone -b $BRANCH git@github.com:coingaming/trading-circleci-notifications.git
