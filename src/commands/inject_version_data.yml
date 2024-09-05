@@ -12,6 +12,6 @@ steps:
       command: |
         echo 'export VERSION_PREFIX=<<parameters.base_version>>.<< parameters.pipeline_id >>' >> $BASH_ENV
         echo 'export VERSION_SUFFIX=$CIRCLE_BRANCH;' >> $BASH_ENV
-        echo 'if [ $CIRCLE_BRANCH == "master" ]; then export VERSION_SUFFIX=test;' >> $BASH_ENV
+        echo 'if [ $CIRCLE_BRANCH == "master" ]; then export VERSION_SUFFIX=test; fi' >> $BASH_ENV
         echo 'if [ $CIRCLE_BRANCH != "master" ]; then export NUGET_VERSION_SUFFIX=$CIRCLE_BRANCH; fi' >> $BASH_ENV
         echo 'export FULL_VERSION=$VERSION_PREFIX-$VERSION_SUFFIX;' >> $BASH_ENV
