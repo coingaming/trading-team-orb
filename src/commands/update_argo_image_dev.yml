@@ -4,10 +4,14 @@ description: >
 parameters:
   repository_name:
     type: string
+  argo_service_name:
+    type: string
+  argo_env_name:
+    type: string
+  
 steps:
   - run:
       name: "Clonning ArgoCD repository"
-      when: always
       command: |
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
@@ -17,4 +21,9 @@ steps:
         chmod 600 ~/.ssh/id_rsa_1
         rm -rf tradeart-tenants
         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone git@github.com:coingaming/tradeart-tenants.git
+  - run:
+      name: "Updating Image Tag"
+      command: |
+        cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
         ls
+

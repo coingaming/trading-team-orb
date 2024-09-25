@@ -13,6 +13,11 @@ parameters:
     type: string
   kube_service_name:
     type: string
+  argo_service_name:
+    type: string
+  argo_env_name:
+    type: string
+
 steps:
   - checkout_common_project
   - inject_version_data:
@@ -20,6 +25,8 @@ steps:
       pipeline_id: << parameters.pipeline_id >>
   - update_argo_image_dev:
       repository_name: <<parameters.repository_name>>
+      argo_service_name: <<parameters.argo_service_name>>
+      argo_env_name: <<parameters.argo_env_name>>
   - inject_slack_templates:
       service_name: <<parameters.kube_service_name>>
   - slack/notify:
