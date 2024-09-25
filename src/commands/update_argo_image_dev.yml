@@ -8,7 +8,7 @@ parameters:
     type: string
   argo_env_name:
     type: string
-  
+
 steps:
   - run:
       name: "Clonning ArgoCD repository"
@@ -26,4 +26,3 @@ steps:
       command: |
         cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
         ls
-
