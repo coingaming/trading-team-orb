@@ -32,4 +32,8 @@ steps:
   - run:
       name: "Committing ArgoCD repository"
       command: |
-        ls
+        cd tradeart-tenants
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1"
+        git add.
+        git commit -a -m "Deploy <<parameters.argo_service_name>> $FULL_VERSION to <<parameters.argo_env_name>>"
+        git push
