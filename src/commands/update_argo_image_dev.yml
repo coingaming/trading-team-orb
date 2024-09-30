@@ -25,4 +25,6 @@ steps:
       name: "Updating Image Tag"
       command: |
         cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
-        ls
+        cat version.yaml
+        sed -i -r 's/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/' version.yaml
+        cat version.yaml
