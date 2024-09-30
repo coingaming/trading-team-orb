@@ -3,10 +3,13 @@ description: >
 
 parameters:
   repository_name:
+    description: Name of the image repository.
     type: string
   argo_service_name:
+    description: Name of the application in ArgoCD repository.
     type: string
   argo_env_name:
+    description: Environment in ArgoCD repository.
     type: string
 
 steps:
@@ -29,5 +32,4 @@ steps:
   - run:
       name: "Committing ArgoCD repository"
       command: |
-        cd ../../../../
         ls
