@@ -29,5 +29,5 @@ steps:
   - run:
       name: "Committing ArgoCD repository"
       command: |
-        cd ../../../../../
+        cd ../../../../
         ls
