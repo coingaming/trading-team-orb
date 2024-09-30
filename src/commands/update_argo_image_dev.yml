@@ -33,9 +33,8 @@ steps:
       name: "Committing ArgoCD repository"
       command: |
         cd tradeart-tenants
-        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1"
-        git config user.email "ivan.simanenka@heathmont.net"
+        git config user.email "tradeart_dev@heathmont.net"
         git config user.name "CircleCI"
         git add .
         git commit -a -m "Deploy <<parameters.argo_service_name>> $FULL_VERSION to <<parameters.argo_env_name>>"
-        git push
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git push
