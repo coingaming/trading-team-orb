@@ -11,6 +11,11 @@ parameters:
   argo_env_name:
     description: Environment in ArgoCD repository.
     type: string
+  deployment_type:
+    description: Type of the deployment, can be global or tenanted.
+    type: enum
+    enum: ["global", "tenanted"]
+    default: "global"
 
 steps:
   - run:
@@ -27,7 +32,12 @@ steps:
   - run:
       name: "Updating Image Tag"
       command: |
-        cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+        echo "Deployment type: <<parameters.deployment_type>>"
+        if ["<<parameters.deployment_type>>" = "global"]; then
+          cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+        else
+          cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+        fi
         sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
   - run:
       name: "Committing ArgoCD repository"
