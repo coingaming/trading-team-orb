@@ -1,0 +1,50 @@
+description: >
+  Updates applicatrion image tag in ArgoCD dev repository.
+
+parameters:
+  repository_name:
+    description: Name of the image repository.
+    type: string
+  argo_service_name:
+    description: Name of the application in ArgoCD repository.
+    type: string
+  argo_env_name:
+    description: Environment in ArgoCD repository.
+    type: string
+  deployment_type:
+    description: Type of the deployment, can be global or tenanted.
+    type: enum
+    enum: ["global", "tenanted"]
+    default: "global"
+
+steps:
+  - run:
+      name: "Clonning ArgoCD repository"
+      command: |
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
+        echo $DEV_CLUSTER_REPO_KEY >> ~/.ssh/id_rsa_1
+        echo '-----END OPENSSH PRIVATE KEY-----' >> ~/.ssh/id_rsa_1
+        ssh-add -D
+        chmod 600 ~/.ssh/id_rsa_1
+        rm -rf tradeart-tenants
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone git@github.com:coingaming/tradeart-tenants.git
+  - run:
+      name: "Updating Image Tag"
+      command: |
+        echo 'Deployment type: <<parameters.deployment_type>>'
+        if [ '<<parameters.deployment_type>>' = 'global' ]; then
+          cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+        else
+          cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+        fi
+        sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
+  - run:
+      name: "Committing ArgoCD repository"
+      command: |
+        cd tradeart-tenants
+        git config user.email "tradeart_dev@heathmont.net"
+        git config user.name "CircleCI"
+        git add .
+        git commit -a -m "Deploy <<parameters.argo_service_name>> $FULL_VERSION to <<parameters.argo_env_name>>"
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git push
