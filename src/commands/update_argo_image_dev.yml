@@ -32,8 +32,8 @@ steps:
   - run:
       name: "Updating Image Tag"
       command: |
-        echo "Deployment type: <<parameters.deployment_type>>"
-        if ["<<parameters.deployment_type>>" = "global"]; then
+        echo 'Deployment type: <<parameters.deployment_type>>'
+        if [ '<<parameters.deployment_type>>' = 'global' ]; then
           cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
         else
           cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
