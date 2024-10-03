@@ -35,10 +35,11 @@ steps:
         echo 'Deployment type: <<parameters.deployment_type>>'
         if [ '<<parameters.deployment_type>>' = 'global' ]; then
           cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+          sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
         else
           cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+          sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" deployment.yaml
         fi
-        sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
   - run:
       name: "Committing ArgoCD repository"
       command: |
