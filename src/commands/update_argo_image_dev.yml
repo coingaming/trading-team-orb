@@ -40,10 +40,10 @@ steps:
         do
           echo "Updating image for: $element"
           if [ '<<parameters.deployment_type>>' = 'global' ]; then
-            cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+            cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/$element/
             sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
           else
-            cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
+            cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/$element/
             sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" deployment.yaml
           fi
         done
@@ -55,5 +55,5 @@ steps:
         git config user.email "tradeart_dev@heathmont.net"
         git config user.name "CircleCI"
         git add .
-        git commit -a -m "Deploy <<parameters.argo_service_name>> $FULL_VERSION to <<parameters.argo_env_name>>"
+        git commit -a -m "Deploy <<parameters.repository_name>> $FULL_VERSION to <<parameters.argo_env_name>>"
         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git push
