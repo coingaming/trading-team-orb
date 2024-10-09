@@ -12,8 +12,8 @@ parameters:
   repository_name:
     description: Name of the image repository.
     type: string
-  argo_service_name:
-    description: Name of the application in ArgoCD repository.
+  argo_service_names:
+    description: Names of the applications in ArgoCD repository, separated by coma.
     type: string
   argo_env_name:
     description: Environment in ArgoCD repository.
@@ -31,11 +31,11 @@ steps:
       pipeline_id: << parameters.pipeline_id >>
   - update_argo_image_dev:
       repository_name: <<parameters.repository_name>>
-      argo_service_name: <<parameters.argo_service_name>>
+      argo_service_names: <<parameters.argo_service_names>>
       argo_env_name: <<parameters.argo_env_name>>
       deployment_type: <<parameters.deployment_type>>
   - inject_slack_templates:
-      service_name: <<parameters.argo_service_name>>
+      service_name: <<parameters.repository_name>>
   - slack/notify:
       event: fail
       template: DEPLOY_FAILED_TEMPLATE
