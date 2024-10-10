@@ -35,18 +35,17 @@ steps:
         echo 'Deployment type: <<parameters.deployment_type>>'
         OLD_IFS=$IFS
         IFS=','
-        RAW_SERVICE_NAMES = "<<parameters.argo_service_names>>"
-        read -ra SERVICE_NAMES <<< $RAW_SERVICE_NAMES
-        for element in "${SERVICE_NAMES[@]}"
-        do
-          echo "Updating image for: $element"
-          if [ '<<parameters.deployment_type>>' = 'global' ]; then
-            cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/$element/
-            sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
-          else
-            cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/$element/
-            sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" deployment.yaml
-          fi
+        echo "<<parameters.argo_service_names>>" | while read -ra array; do
+          for element in "${array[@]}"; do
+            echo "Updating image for: $element"
+            if [ '<<parameters.deployment_type>>' = 'global' ]; then
+              cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/$element/
+              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
+            else
+              cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/$element/
+              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" deployment.yaml
+            fi
+          done
         done
         IFS=$OLD_IFS
   - run:
