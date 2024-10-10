@@ -5,8 +5,8 @@ parameters:
   repository_name:
     description: Name of the image repository.
     type: string
-  argo_service_name:
-    description: Name of the application in ArgoCD repository.
+  argo_service_names:
+    description: Names of the applications in ArgoCD repository, separated by coma.
     type: string
   argo_env_name:
     description: Environment in ArgoCD repository.
@@ -33,13 +33,19 @@ steps:
       name: "Updating Image Tag"
       command: |
         echo 'Deployment type: <<parameters.deployment_type>>'
-        if [ '<<parameters.deployment_type>>' = 'global' ]; then
-          cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
-          sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
-        else
-          cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/<<parameters.argo_service_name>>/
-          sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" deployment.yaml
-        fi
+        OLD_IFS=$IFS
+        IFS=','
+        echo "<<parameters.argo_service_names>>" | while read -ra array; do
+          for element in "${array[@]}"; do
+            echo "Updating image for: $element"
+            if [ '<<parameters.deployment_type>>' = 'global' ]; then
+              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/$element/version.yaml
+            else
+              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/$element/deployment.yaml
+            fi
+          done
+        done
+        IFS=$OLD_IFS
   - run:
       name: "Committing ArgoCD repository"
       command: |
@@ -47,5 +53,5 @@ steps:
         git config user.email "tradeart_dev@heathmont.net"
         git config user.name "CircleCI"
         git add .
-        git commit -a -m "Deploy <<parameters.argo_service_name>> $FULL_VERSION to <<parameters.argo_env_name>>"
+        git commit -a -m "Deploy <<parameters.repository_name>> $FULL_VERSION to <<parameters.argo_env_name>>"
         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git push
