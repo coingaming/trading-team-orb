@@ -39,11 +39,9 @@ steps:
           for element in "${array[@]}"; do
             echo "Updating image for: $element"
             if [ '<<parameters.deployment_type>>' = 'global' ]; then
-              cd tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/$element/
-              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" version.yaml
+              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/$element/version.yaml
             else
-              cd tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/$element/
-              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" deployment.yaml
+              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/$element/deployment.yaml
             fi
           done
         done
