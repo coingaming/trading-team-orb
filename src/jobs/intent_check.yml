@@ -3,6 +3,7 @@ description: >
 
 executor:
   name: intent
+  tag: <<parameters.intent_version>>
 
 parameters:
   path_to_intent:
@@ -13,6 +14,10 @@ parameters:
     description: The Id of the Intent Architect application. If unspecified then all applications found in the .isln will be run.
     type: string
     default: ''
+  intent_version:
+    description: Version of intent check tool required for the run.
+    type: string
+    default: '4.3.4'
 
 steps:
   - checkout
