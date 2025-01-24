@@ -16,4 +16,4 @@ steps:
   - inject_slack_templates
   - slack/notify:
       template: WAITING_APPROVE_TEMPLATE
-      channel: tradeart-circleci-notifications
+      channel: odds88-circleci-notifications

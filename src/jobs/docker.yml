@@ -33,4 +33,4 @@ steps:
   - slack/notify:
       event: fail
       template: DOCKER_FAILED_TEMPLATE
-      channel: tradeart-circleci-notifications
+      channel: odds88-circleci-notifications

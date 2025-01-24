@@ -31,8 +31,8 @@ steps:
   - slack/notify:
       event: fail
       template: BUILD_FAILED_TEMPLATE
-      channel: tradeart-circleci-notifications
+      channel: odds88-circleci-notifications
   - slack/notify:
       event: pass
       template: NUGET_SUCCESS_TEMPLATE
-      channel: tradeart-circleci-notifications
+      channel: odds88-circleci-notifications
