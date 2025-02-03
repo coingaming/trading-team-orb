@@ -1,5 +1,5 @@
 description: >
-  Updates applicatrion image tag in ArgoCD dev repository.
+  Updates applicatrion image tag in ArgoCD prod repository.
 
 parameters:
   repository_name:
@@ -7,9 +7,6 @@ parameters:
     type: string
   argo_service_names:
     description: Names of the applications in ArgoCD repository, separated by coma.
-    type: string
-  argo_env_name:
-    description: Environment in ArgoCD repository.
     type: string
   deployment_type:
     description: Type of the deployment, can be global or tenanted.
@@ -23,12 +20,12 @@ steps:
       command: |
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
-        echo $DEV_CLUSTER_REPO_KEY >> ~/.ssh/id_rsa_1
+        echo $PROD_CLUSTER_REPO_KEY >> ~/.ssh/id_rsa_1
         echo '-----END OPENSSH PRIVATE KEY-----' >> ~/.ssh/id_rsa_1
         ssh-add -D
         chmod 600 ~/.ssh/id_rsa_1
-        rm -rf tradeart-tenants
-        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone git@github.com:coingaming/tradeart-tenants.git
+        rm -rf tradeart-tenants-prod
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone git@github.com:coingaming/tradeart-tenants-prod.git
   - run:
       name: "Updating Image Tag"
       command: |
@@ -39,9 +36,9 @@ steps:
           for element in "${array[@]}"; do
             echo "Updating image for: $element"
             if [ '<<parameters.deployment_type>>' = 'global' ]; then
-              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" tradeart-tenants/argocd/services/overlays/<<parameters.argo_env_name>>/$element/version.yaml
+              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" tradeart-tenants-prod/argocd/services/overlays/prod/$element/version.yaml
             else
-              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" tradeart-tenants/argocd/base/<<parameters.argo_env_name>>/$element/deployment.yaml
+              sed -i -r "s/<<parameters.repository_name>>\:(.+)/<<parameters.repository_name>>\:$FULL_VERSION/" tradeart-tenants-prod/argocd/base/$element/deployment.yaml
             fi
           done
         done
@@ -49,9 +46,9 @@ steps:
   - run:
       name: "Committing ArgoCD repository"
       command: |
-        cd tradeart-tenants
+        cd tradeart-tenants-prod
         git config user.email "tradeart_dev@yolo.com"
         git config user.name "CircleCI"
         git add .
-        git commit -a -m "Deploy <<parameters.repository_name>> $FULL_VERSION to <<parameters.argo_env_name>>"
+        git commit -a -m "Deploy <<parameters.repository_name>> $FULL_VERSION to PROD"
         GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git push
