@@ -1,0 +1,42 @@
+description: >
+  Deploy with ArgoCD to prod cluster.
+
+executor: docker-builder
+
+parameters:
+  base_version:
+    description: Base version
+    type: string
+  pipeline_id:
+    type: integer
+  repository_name:
+    description: Name of the image repository.
+    type: string
+  argo_service_names:
+    description: Names of the applications in ArgoCD repository, separated by coma.
+    type: string
+  deployment_type:
+    description: Type of the deployment, can be global or tenanted.
+    type: enum
+    enum: ["global", "tenanted"]
+    default: "global"
+
+steps:
+  - checkout_common_project
+  - inject_version_data:
+      base_version: <<parameters.base_version>>
+      pipeline_id: << parameters.pipeline_id >>
+  - update_argo_image_prod:
+      repository_name: <<parameters.repository_name>>
+      argo_service_names: <<parameters.argo_service_names>>
+      deployment_type: <<parameters.deployment_type>>
+  - inject_slack_templates:
+      service_name: <<parameters.repository_name>>
+  - slack/notify:
+      event: fail
+      template: DEPLOY_FAILED_TEMPLATE
+      channel: odds88-circleci-notifications
+  - slack/notify:
+      event: pass
+      template: DEPLOY_SUCCESS_TEMPLATE
+      channel: odds88-circleci-notifications
