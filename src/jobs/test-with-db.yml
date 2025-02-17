@@ -18,6 +18,9 @@ steps:
   - start_postgresql_service
   - git-shallow-clone/checkout_advanced:
       clone_options: '--filter=blob:none'
+  - run:
+      name: "Git fetch"
+      command: git fetch --no-filter --refetch
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
   - inject_slack_templates
