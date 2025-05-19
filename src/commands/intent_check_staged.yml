@@ -8,9 +8,17 @@ parameters:
   application_id:
     type: string
     default: ''
+  intent_version:
+    type: string
+    default: '4.4.5'
 steps:
   - run:
-      name: "Running SF CLI"
+      name: "Install Intent CLI"
+      command: |
+        dotnet tool install Intent.SoftwareFactory.CLI --global --version <<parameters.intent_version>>
+        PATH="${PATH}:/root/.dotnet/tools"
+  - run:
+      name: "Check Intent unstaged changes"
       command: |
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1

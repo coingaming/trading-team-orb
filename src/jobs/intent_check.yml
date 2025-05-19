@@ -2,8 +2,8 @@ description: >
   Check Intent Architect project.
 
 executor:
-  name: intent
-  tag: <<parameters.intent_version>>
+  name: default
+  tag: "8.0"
 
 parameters:
   path_to_intent:
@@ -17,13 +17,14 @@ parameters:
   intent_version:
     description: Version of intent check tool required for the run.
     type: string
-    default: '4.3.4'
+    default: '4.4.5'
 
 steps:
   - checkout
   - intent_check_staged:
       path_to_intent: <<parameters.path_to_intent>>
       application_id: <<parameters.application_id>>
+      intent_version: <<parameters.intent_version>>
   - inject_slack_templates
   - slack/notify:
       event: fail
