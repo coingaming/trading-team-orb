@@ -11,5 +11,5 @@ display:
   source_url: "https://github.com/coingaming/trading-team-orb"
 
 orbs:
-  slack: circleci/slack@4.2.1
+  slack: circleci/slack@5.1.1 # https://circleci.com/developer/orbs/orb/circleci/slack
   git-shallow-clone: guitarrapc/git-shallow-clone@2.8.0
