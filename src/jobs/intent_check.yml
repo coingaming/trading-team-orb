@@ -3,7 +3,7 @@ description: >
 
 executor:
   name: default
-  tag: "8.0"
+  tag: "9.0"
 
 parameters:
   path_to_intent:
