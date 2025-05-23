@@ -20,6 +20,8 @@ steps:
   - run:
       name: "Git fetch"
       command: git fetch --no-filter --refetch
+  - setup_remote_docker: # For integration tests
+      docker_layer_caching: true
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
   - inject_slack_templates
