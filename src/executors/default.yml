@@ -2,6 +2,7 @@ description: >
   Default build executor
 docker:
   - image: 'public.ecr.aws/y7n1s6r0/trading-dev-core-sdk:<<parameters.tag>>'
+resource_class: <<parameters.resource_class>>
 working_directory: /mnt/ramdisk
 parameters:
   tag:
@@ -9,4 +10,10 @@ parameters:
     description: >
       Pick a specific image tag:
       https://gallery.ecr.aws/y7n1s6r0/trading-dev-core-sdk
+    type: string
+  resource_class:
+    default: 'medium'
+    description: >
+      Pick a specific resource class:
+      https://circleci.com/docs/2.0/configuration-reference/#resource_class
     type: string
