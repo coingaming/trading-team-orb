@@ -4,11 +4,15 @@ description: >
 executor:
   name: default
   tag: <<parameters.builder_image_tag>>
+  resource_class: <<parameters.execuror_class>>
 
 parameters:
   builder_image_tag:
     default: '3.1'
     description: Tag of builder image
+    type: string
+  execuror_class:
+    default: 'medium'
     type: string
   sonarscanner_project_key:
     description: Project Key For SonarScanner
