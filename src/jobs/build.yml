@@ -6,18 +6,22 @@ executor:
   tag: <<parameters.builder_image_tag>>
 
 parameters:
-  solution_path:
-    description: Path to csproj file relative to project root
-    type: string
   builder_image_tag:
     default: '3.1'
     description: Tag of builder image
     type: string
+  solution_path:
+    description: Path to csproj file relative to project root
+    type: string
+  is_lambda:
+    type: boolean
+    default: false
 
 steps:
   - checkout
   - build_solution:
       solution_path: <<parameters.solution_path>>
+      is_lambda: <<parameters.is_lambda>>
   - persist_to_workspace:
       root: ./
       paths:
