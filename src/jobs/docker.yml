@@ -1,5 +1,5 @@
 description: >
-  Pack NuGets
+  Build and push docker image
 
 executor: docker-builder
 

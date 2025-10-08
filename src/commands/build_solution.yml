@@ -3,10 +3,19 @@ description: >
 parameters:
   solution_path:
     type: string
+  is_lambda:
+    type: boolean
+    default: false
 steps:
   - run:
       name: "Building solution"
       command: |
         dotnet build <<parameters.solution_path>>
-        dotnet publish <<parameters.solution_path>> -c Release -o app/out
+
+        if [ "<<parameters.is_lambda>>" = "true" ]; then
+          dotnet publish <<parameters.solution_path>> -c Release -o app/out --self-contained true /p:GenerateRuntimeConfigurationFiles=true --runtime linux-x64
+        else
+          dotnet publish <<parameters.solution_path>> -c Release -o app/out
+        fi
+
         rm -rf build
