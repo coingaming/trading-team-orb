@@ -1,0 +1,40 @@
+description: >
+  Deploy with ArgoCD to dev cluster.
+
+executor:
+  name: default
+  tag: <<parameters.builder_image_tag>>
+
+parameters:
+  builder_image_tag:
+    default: '3.1'
+    description: Tag of builder image
+    type: string
+  base_version:
+    description: Base version
+    type: string
+  pipeline_id:
+    type: integer
+  repository_name:
+    type: string
+  function_name:
+    type: string
+
+steps:
+  - inject_version_data:
+      base_version: <<parameters.base_version>>
+      pipeline_id: <<parameters.pipeline_id>>
+  - deploy_lambda:
+      function_name: <<parameters.function_name>>
+      repository_name: <<parameters.repository_name>>
+      full_version: $FULL_VERSION
+  - inject_slack_templates:
+      service_name: <<parameters.repository_name>>
+  - slack/notify:
+      event: fail
+      template: DEPLOY_FAILED_TEMPLATE
+      channel: odds88-circleci-notifications
+  - slack/notify:
+      event: pass
+      template: DEPLOY_SUCCESS_TEMPLATE
+      channel: odds88-circleci-notifications
