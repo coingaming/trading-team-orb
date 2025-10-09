@@ -3,7 +3,7 @@ description: >
 parameters:
   function_name:
     type: string
-  repository_name:  
+  repository_name:
     type: string
   full_version:
     type: string
