@@ -12,6 +12,8 @@ steps:
   - run:
       name: "Initializing docker buildx"
       command: |
+        docker version
+        docker buildx version
         docker buildx create --use
   - run:
       name: "Running docker build"
