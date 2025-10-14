@@ -1,4 +1,4 @@
 description: >
   Docker Build executor
 docker:
-  - image: public.ecr.aws/y7n1s6r0/trading-dev-docker-build:3.0
+  - image: public.ecr.aws/y7n1s6r0/trading-dev-docker-build:4.0
