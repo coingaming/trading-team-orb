@@ -1,5 +1,5 @@
 description: >
-  Build Docker Image
+  Build and Push Docker Image
 parameters:
   full_version:
     type: string
@@ -29,3 +29,4 @@ steps:
           -f CircleDockerfile . \
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>> \
           --push
+        echo "Docker image built and pushed: <<parameters.repository_name>>:<<parameters.full_version>>"
