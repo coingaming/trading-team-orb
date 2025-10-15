@@ -16,6 +16,10 @@ steps:
         docker buildx version
         docker buildx create --use
   - run:
+      name: "Logging in to AWS ECR"
+      command: |
+        aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  - run:
       name: "Running docker build"
       command: |
         cd <<parameters.base_path>>

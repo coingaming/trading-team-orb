@@ -26,9 +26,6 @@ steps:
       full_version: $FULL_VERSION
       base_path: <<parameters.base_path>>
       repository_name: <<parameters.repository_name>>
-  - push_docker_image:
-      full_version: $FULL_VERSION
-      repository_name: <<parameters.repository_name>>
   - inject_slack_templates
   - slack/notify:
       event: fail
