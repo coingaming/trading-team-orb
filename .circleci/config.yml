@@ -13,23 +13,18 @@ workflows:
     jobs:
       - orb-tools/lint:
           filters: *filters
-          resource_class: small
       - orb-tools/pack:
           filters: *filters
-          resource_class: small
       - orb-tools/review:
           exclude: "RC009,RC010"
           filters: *filters
-          resource_class: small
       - shellcheck/check:
           filters: *filters
-          resource_class: small
       - orb-tools/publish:
           name: DEV publish
           orb_name: coingaming/trading-team-orb
           vcs_type: << pipeline.project.type >>
           pub_type: dev
-          resource_class: small
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
           # Use a context to hold your publishing token.
@@ -40,7 +35,6 @@ workflows:
           pipeline_number: << pipeline.number >>
           vcs_type: << pipeline.project.type >>
           orb_name: trading-team-orb
-          resource_class: small
           requires:
             - DEV publish
           filters: *filters
