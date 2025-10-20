@@ -1,7 +1,7 @@
 description: >
   Deploy with ArgoCD to dev cluster.
 
-executor: 
+executor:
   name: docker-builder
   resource_class: <<parameters.executor_class>>
 
