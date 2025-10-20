@@ -4,6 +4,7 @@ description: >
 executor:
   name: default
   tag: <<parameters.builder_image_tag>>
+  resource_class: <<parameters.executor_class>>
 
 parameters:
   namespaces:
@@ -17,6 +18,9 @@ parameters:
   builder_image_tag:
     default: '3.1'
     description: Tag of builder image
+    type: string
+  executor_class:
+    default: 'small'
     type: string
 
 steps:
