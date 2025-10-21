@@ -1,7 +1,9 @@
 description: >
   Deploy with ArgoCD to dev cluster.
 
-executor: docker-builder
+executor:
+  name: docker-builder
+  resource_class: <<parameters.executor_class>>
 
 parameters:
   base_version:
@@ -23,6 +25,9 @@ parameters:
     type: enum
     enum: ["global", "tenanted"]
     default: "global"
+  executor_class:
+    default: 'small'
+    type: string
 
 steps:
   - checkout_common_project
