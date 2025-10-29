@@ -4,6 +4,7 @@ description: >
 executor:
   name: default
   tag: "9.0"
+  resource_class: <<parameters.executor_class>>
 
 parameters:
   path_to_intent:
@@ -18,6 +19,9 @@ parameters:
     description: Version of intent check tool required for the run.
     type: string
     default: '4.4.5'
+  executor_class:
+    default: 'medium'
+    type: string
 
 steps:
   - checkout

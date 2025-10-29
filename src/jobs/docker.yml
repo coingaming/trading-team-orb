@@ -1,7 +1,9 @@
 description: >
   Build and push docker image
 
-executor: docker-builder
+executor:
+  name: docker-builder
+  resource_class: <<parameters.executor_class>>
 
 parameters:
   base_version:
@@ -14,6 +16,9 @@ parameters:
   base_path:
     type: string
     default: "."
+  executor_class:
+    default: 'medium'
+    type: string
 
 steps:
   - attach_workspace:
