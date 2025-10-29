@@ -11,4 +11,4 @@ steps:
   - run:
       name: "Deploying lambda function"
       command: |
-        aws lambda update-function-code --function-name <<parameters.function_name>> --image-uri $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>> --publish
+        aws --region $AWS_DEFAULT_REGION lambda update-function-code --function-name <<parameters.function_name>> --image-uri $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>> --publish
