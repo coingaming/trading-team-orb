@@ -27,3 +27,4 @@ steps:
           -f CircleDockerfile . \
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>> \
           --push
+        echo "Image built and pushed: <<parameters.repository_name>>:<<parameters.full_version>>"
