@@ -10,8 +10,21 @@ parameters:
     default: "."
 steps:
   - run:
+      name: "Enable buildx"
+      command: |
+        docker buildx create --use
+  - run:
+      name: "Authorize in AWS ECR"
+      command: |
+        aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  - run:
       name: "Running docker build"
       command: |
         cd <<parameters.base_path>>
         if [ <<parameters.base_path>> != "." ]; then cp -R /home/circleci/project/app .; fi
-        docker build -f CircleDockerfile . -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>>
+        docker buildx  build \
+          --platform linux/amd64,linux/arm64 \
+          -f CircleDockerfile . \
+          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>> \
+          --push
+        echo "Image built and pushed: <<parameters.repository_name>>:<<parameters.full_version>>"
