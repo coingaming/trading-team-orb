@@ -12,7 +12,9 @@ steps:
   - run:
       name: "Enable buildx"
       command: |
-        docker buildx create --use
+        docker buildx rm --all 2>/dev/null || true
+        docker buildx create --use --name circleci-builder --driver docker-container
+        docker buildx inspect --bootstrap
   - run:
       name: "Authorize in AWS ECR"
       command: |
