@@ -12,6 +12,7 @@ steps:
   - run:
       name: "Enable buildx"
       command: |
+        cd <<parameters.base_path>>
         # Clean up any existing builders
         docker buildx rm --all 2>/dev/null || true
         # Create a new builder instance and use it
