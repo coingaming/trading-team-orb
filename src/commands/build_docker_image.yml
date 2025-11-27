@@ -27,6 +27,9 @@ steps:
       command: |
         aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   - run:
+      name: Add github.com to known hosts
+      command: ssh-keyscan github.com >> ~/.ssh/known_hosts
+  - run:
       name: "Running docker build"
       command: |
         echo "Path: <<parameters.base_path>>"
@@ -34,7 +37,7 @@ steps:
           cd <<parameters.base_path>>;
           cp -R /home/circleci/project/app .;
         fi
-        docker buildx  build \
+        docker buildx build \
           --platform linux/amd64,linux/arm64 \
           -f CircleDockerfile . \
           -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/<<parameters.repository_name>>:<<parameters.full_version>> \
