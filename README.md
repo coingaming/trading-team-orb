@@ -19,3 +19,16 @@ Create and push a tag with new version to be released. Please use properly incre
 
 For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).
 
+### How to pack your orb for validation or publishing a dev version
+
+circleci orb pack src > orb.yml
+
+### How to validate orb on your local via circleci cli
+
+circleci orb validate orb.yml
+
+### How to publish dev orb from your local
+
+* Your orb will expire in 90 days unless a new version is published on the label `dev:alpha`
+
+circleci orb publish orb.yml coingaming/trading-team-orb@dev:alpha
