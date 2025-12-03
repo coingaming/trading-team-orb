@@ -1,5 +1,5 @@
 description: >
-  Builds target solution
+  Builds lambda solution
 parameters:
   solution_path:
     type: string
@@ -9,6 +9,6 @@ steps:
       command: |
         dotnet build <<parameters.solution_path>>
 
-        dotnet publish <<parameters.solution_path>> -c Release -o app/out
+        dotnet publish <<parameters.solution_path>> -c Release -o app/out --self-contained true /p:GenerateRuntimeConfigurationFiles=true --runtime linux-x64
 
         rm -rf build

@@ -1,5 +1,5 @@
 description: >
-  Runs Solution Build
+  Runs Solution Build for lambda functions
 
 executor:
   name: default
@@ -20,7 +20,7 @@ parameters:
 
 steps:
   - checkout
-  - build_solution:
+  - build_lambda_solution:
       solution_path: <<parameters.solution_path>>
   - persist_to_workspace:
       root: ./
