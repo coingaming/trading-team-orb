@@ -3,11 +3,17 @@ description: >
 parameters:
   solution_path:
     type: string
+  run_marten_codegen:
+    type: boolean    
 steps:
   - run:
       name: "Building solution"
-      command: |
-        dotnet build <<parameters.solution_path>>
+      command: |        
+        if [ <<parameters.run_marten_codegen>> ]; then
+          dotnet run --project <<parameters.solution_path>> -- codegen write
+        else
+          dotnet build <<parameters.solution_path>>
+        fi
 
         dotnet publish <<parameters.solution_path>> -c Release -o app/out
 
