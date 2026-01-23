@@ -4,11 +4,11 @@ parameters:
   solution_path:
     type: string
   run_marten_codegen:
-    type: boolean    
+    type: boolean
 steps:
   - run:
       name: "Building solution"
-      command: |        
+      command: |
         if [ <<parameters.run_marten_codegen>> ]; then
           dotnet run --project <<parameters.solution_path>> -- codegen write
         else
