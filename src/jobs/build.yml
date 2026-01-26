@@ -17,11 +17,16 @@ parameters:
   solution_path:
     description: Path to csproj file relative to project root
     type: string
+  run_marten_codegen:
+    default: false
+    description: Set this to true for projects that implement code generation for Marten
+    type: boolean
 
 steps:
   - checkout
   - build_solution:
       solution_path: <<parameters.solution_path>>
+      run_marten_codegen: <<parameters.run_marten_codegen>>
   - persist_to_workspace:
       root: ./
       paths:
