@@ -9,7 +9,7 @@ steps:
   - run:
       name: "Building solution"
       command: |
-        if [ <<parameters.run_marten_codegen>> ]; then
+        if <<parameters.run_marten_codegen>>; then
           dotnet run --project <<parameters.solution_path>> -- codegen write
         else
           dotnet build <<parameters.solution_path>>
