@@ -3,7 +3,7 @@ description: >
 
 executor:
   name: default
-  tag: "9.0"
+  tag: "10.0"
   resource_class: <<parameters.executor_class>>
 
 parameters:
