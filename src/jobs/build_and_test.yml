@@ -43,9 +43,9 @@ parameters:
     default: false
     description: Start the local PostgreSQL service before tests (needs a *-db builder image).
     type: boolean
-  setup_remote_docker:
+  test_containers_required:
     default: true
-    description: Set up remote Docker for integration tests.
+    description: Set true when tests launch Docker containers (Testcontainers or raw Docker) — provisions remote Docker. Not needed for pure unit tests or in-image DB tests (with_db).
     type: boolean
   docker_layer_caching:
     default: true
@@ -67,9 +67,9 @@ steps:
       name: "Git fetch"
       command: git fetch --no-filter --refetch
   - when:
-      condition: <<parameters.setup_remote_docker>>
+      condition: <<parameters.test_containers_required>>
       steps:
-        - setup_remote_docker: # For integration tests
+        - setup_remote_docker: # provisioned only when tests launch containers
             docker_layer_caching: <<parameters.docker_layer_caching>>
   - when:
       condition: <<parameters.namespaces>>
