@@ -17,6 +17,10 @@ parameters:
   sonarscanner_project_key:
     description: Project Key For SonarScanner
     type: string
+  docker_layer_caching:
+    default: true
+    description: Docker layer caching — a paid ~200 credit/job feature. On by default to keep existing behaviour; set false per project to save ~200 credits/run when in-test image pulls/builds are light.
+    type: boolean
 
 steps:
   - git-shallow-clone/checkout_advanced:
@@ -25,7 +29,7 @@ steps:
       name: "Git fetch"
       command: git fetch --no-filter --refetch
   - setup_remote_docker: # For integration tests
-      docker_layer_caching: true
+      docker_layer_caching: <<parameters.docker_layer_caching>>
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
   - inject_slack_templates
