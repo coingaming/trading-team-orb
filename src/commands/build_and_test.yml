@@ -1,0 +1,108 @@
+description: >
+  Restore, build, test and optionally pack NuGets and publish. Compiles the
+  solution once and reuses it for test/pack/publish via --no-build.
+
+parameters:
+  project_path:
+    description: Host csproj to publish to app/out. Empty for library repos (test + pack only).
+    type: string
+    default: ""
+  namespaces:
+    description: Space-separated projects to pack as NuGets. Empty skips packing.
+    type: string
+    default: ""
+  sonarscanner_project_key:
+    description: Project Key For SonarScanner. Empty skips Sonar.
+    type: string
+    default: ""
+  run_marten_codegen:
+    default: false
+    description: Set this to true for projects that implement code generation for Marten
+    type: boolean
+
+steps:
+  - run:
+      name: "Preparing NuGet cache key"
+      command: |
+        find . \( -name '*.csproj' -o -name 'packages.lock.json' \) -print0 \
+          | sort -z | xargs -0 cat 2>/dev/null | sha256sum | cut -d' ' -f1 > /tmp/nuget-cache-key || echo "nolock" > /tmp/nuget-cache-key
+  - restore_cache:
+      keys:
+        - dotnet-nuget-v1-{{ checksum "/tmp/nuget-cache-key" }}
+        - dotnet-nuget-v1-
+  - run:
+      name: "Restoring packages"
+      command: dotnet restore
+  - save_cache:
+      key: dotnet-nuget-v1-{{ checksum "/tmp/nuget-cache-key" }}
+      paths:
+        - ~/.nuget/packages
+  - when:
+      condition: <<parameters.sonarscanner_project_key>>
+      steps:
+        - run:
+            name: "Sonar begin"
+            command: |
+              # Sonar runs on feature branches and master, skipped on staging/release.
+              if [ "$CIRCLE_BRANCH" = "staging" ] || [ "$CIRCLE_BRANCH" = "release" ]; then
+                echo "Skipping Sonar on $CIRCLE_BRANCH"
+              else
+                dotnet sonarscanner begin /k:"<<parameters.sonarscanner_project_key>>" /d:sonar.login=$SONAR_TOKEN /d:sonar.host.url=https://sonarcloud.io /o:"coingaming" /d:sonar.verbose=false /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests*.cs,**/Migrations/*.cs,**/Startup.cs,**Program.cs,**Startup.cs"
+              fi
+  - when:
+      condition: <<parameters.run_marten_codegen>>
+      steps:
+        - run:
+            name: "Running Marten codegen"
+            command: dotnet run --project <<parameters.project_path>> -- codegen write
+  - run:
+      name: "Building solution"
+      command: |
+        apt-get update && apt-get install libunwind8 libxml2 -y
+        dotnet build -c Release --no-restore
+  - run:
+      name: "Running tests"
+      command: |
+        dotnet test --no-build --no-restore -c Release --logger "trx" --logger "console;verbosity=detailed" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SplitCoverage="True" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+  - when:
+      condition: <<parameters.sonarscanner_project_key>>
+      steps:
+        - run:
+            name: "Sonar end"
+            command: |
+              if [ "$CIRCLE_BRANCH" = "staging" ] || [ "$CIRCLE_BRANCH" = "release" ]; then
+                echo "Skipping Sonar on $CIRCLE_BRANCH"
+              else
+                dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
+              fi
+  - run:
+      name: "Convert test results"
+      when: always
+      command: |
+        find -regex ".*\/TestResults\/.+\.trx$" -not -type d
+        mkdir -p tests/TestResultsRaw/
+        find -regex ".*\/TestResults\/.+\.trx$" -not -type d -exec cp "{}" ./tests/TestResultsRaw/ ";"
+        trx2junit ./tests/TestResultsRaw/*.trx  --output ./tests/TestResults
+  - store_test_results:
+      path: tests/TestResults
+  - when:
+      condition: <<parameters.namespaces>>
+      steps:
+        - run:
+            name: "Packing and pushing Nugets"
+            command: |
+              # NuGets are published from feature branches and master, not staging/release.
+              if [ "$CIRCLE_BRANCH" = "staging" ] || [ "$CIRCLE_BRANCH" = "release" ]; then
+                echo "Skipping NuGet publish on $CIRCLE_BRANCH"
+              else
+                for i in <<parameters.namespaces>>; do
+                  dotnet pack $i --no-build -c Release --output /app/nupkgs -p:VersionSuffix=$NUGET_VERSION_SUFFIX -p:VersionPrefix=$VERSION_PREFIX
+                done
+                dotnet nuget push /app/nupkgs/ --source "nuget/Main" --skip-duplicate
+              fi
+  - when:
+      condition: <<parameters.project_path>>
+      steps:
+        - run:
+            name: "Publishing solution"
+            command: dotnet publish <<parameters.project_path>> --no-build -c Release -o app/out

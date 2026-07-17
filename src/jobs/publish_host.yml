@@ -1,0 +1,37 @@
+description: >
+  Publish one host from the shared build_and_test compile (--no-build) and hand
+  the result to a docker job. Requires a build_and_test job run with
+  persist_build: true. One publish_host per host keeps each docker job's
+  workspace to a single app/out (no collision).
+
+executor:
+  name: default
+  tag: <<parameters.builder_image_tag>>
+  resource_class: <<parameters.executor_class>>
+
+parameters:
+  builder_image_tag:
+    default: '9.0'
+    description: Tag of builder image
+    type: string
+  executor_class:
+    default: 'small'
+    type: string
+  project_path:
+    description: Host csproj to publish to app/out.
+    type: string
+
+steps:
+  - attach_workspace:
+      at: ./
+  - publish_host:
+      project_path: <<parameters.project_path>>
+  - persist_to_workspace:
+      root: ./
+      paths:
+        - .
+  - inject_slack_templates
+  - slack/notify:
+      event: fail
+      template: BUILD_FAILED_TEMPLATE
+      channel: odds88-circleci-notifications
