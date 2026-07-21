@@ -21,15 +21,7 @@ parameters:
     type: boolean
 
 steps:
-  - run:
-      name: "Preparing NuGet cache key"
-      command: |
-        find . \( -name '*.csproj' -o -name 'packages.lock.json' \) -print0 \
-          | sort -z | xargs -0 cat 2>/dev/null | sha256sum | cut -d' ' -f1 > /tmp/nuget-cache-key || echo "nolock" > /tmp/nuget-cache-key
-  - restore_cache:
-      keys:
-        - dotnet-nuget-v1-{{ checksum "/tmp/nuget-cache-key" }}
-        - dotnet-nuget-v1-
+  - restore_nuget_cache
   - run:
       name: "Restoring packages"
       command: dotnet restore
@@ -75,16 +67,7 @@ steps:
               else
                 dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
               fi
-  - run:
-      name: "Convert test results"
-      when: always
-      command: |
-        find -regex ".*\/TestResults\/.+\.trx$" -not -type d
-        mkdir -p tests/TestResultsRaw/
-        find -regex ".*\/TestResults\/.+\.trx$" -not -type d -exec cp "{}" ./tests/TestResultsRaw/ ";"
-        trx2junit ./tests/TestResultsRaw/*.trx  --output ./tests/TestResults
-  - store_test_results:
-      path: tests/TestResults
+  - convert_test_results
   - when:
       condition: <<parameters.namespaces>>
       steps:
@@ -103,6 +86,5 @@ steps:
   - when:
       condition: <<parameters.project_path>>
       steps:
-        - run:
-            name: "Publishing solution"
-            command: dotnet publish <<parameters.project_path>> --no-build -c Release -o app/out
+        - publish_solution_nobuild:
+            project_path: <<parameters.project_path>>

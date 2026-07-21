@@ -1,0 +1,15 @@
+description: >
+  Collect .trx test results and convert them to JUnit so CircleCI can render
+  the test summary. Runs on both pass and fail.
+
+steps:
+  - run:
+      name: "Convert test results"
+      when: always
+      command: |
+        find -regex ".*\/TestResults\/.+\.trx$" -not -type d
+        mkdir -p tests/TestResultsRaw/
+        find -regex ".*\/TestResults\/.+\.trx$" -not -type d -exec cp "{}" ./tests/TestResultsRaw/ ";"
+        trx2junit ./tests/TestResultsRaw/*.trx  --output ./tests/TestResults
+  - store_test_results:
+      path: tests/TestResults

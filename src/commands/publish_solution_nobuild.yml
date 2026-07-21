@@ -1,0 +1,14 @@
+description: >
+  Publish a project to app/out reusing an existing compile (--no-build).
+  Requires the compiled tree to be present (same job as build_and_test, or a
+  workspace attached from it) and ~/.nuget/packages restored.
+
+parameters:
+  project_path:
+    description: Host csproj to publish to app/out.
+    type: string
+
+steps:
+  - run:
+      name: "Publishing solution"
+      command: dotnet publish <<parameters.project_path>> --no-build -c Release -o app/out

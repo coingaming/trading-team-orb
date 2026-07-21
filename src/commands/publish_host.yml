@@ -12,15 +12,6 @@ parameters:
 steps:
   # publish --no-build still needs ~/.nuget/packages to assemble the output, and
   # that cache doesn't travel in the workspace — so restore it here first.
-  - run:
-      name: "Preparing NuGet cache key"
-      command: |
-        find . \( -name '*.csproj' -o -name 'packages.lock.json' \) -print0 \
-          | sort -z | xargs -0 cat 2>/dev/null | sha256sum | cut -d' ' -f1 > /tmp/nuget-cache-key || echo "nolock" > /tmp/nuget-cache-key
-  - restore_cache:
-      keys:
-        - dotnet-nuget-v1-{{ checksum "/tmp/nuget-cache-key" }}
-        - dotnet-nuget-v1-
-  - run:
-      name: "Publishing solution"
-      command: dotnet publish <<parameters.project_path>> --no-build -c Release -o app/out
+  - restore_nuget_cache
+  - publish_solution_nobuild:
+      project_path: <<parameters.project_path>>
