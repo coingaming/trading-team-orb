@@ -14,13 +14,4 @@ steps:
         dotnet build
         dotnet test --logger "trx" --logger "console;verbosity=detailed" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SplitCoverage="True" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         dotnet sonarscanner end /d:sonar.login=$SONAR_TOKEN
-  - run:
-      name: "Convert test results"
-      when: always
-      command: |
-        find -regex ".*\/TestResults\/.+\.trx$" -not -type d
-        mkdir -p tests/TestResultsRaw/
-        find -regex ".*\/TestResults\/.+\.trx$" -not -type d -exec cp "{}" ./tests/TestResultsRaw/ ";"
-        trx2junit ./tests/TestResultsRaw/*.trx  --output ./tests/TestResults
-  - store_test_results:
-      path: tests/TestResults
+  - convert_test_results

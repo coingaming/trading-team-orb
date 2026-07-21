@@ -1,0 +1,17 @@
+description: >
+  Publish a single host to app/out, reusing the compile from build_and_test
+  (via --no-build). Use this when multi-host repos so every host is published from
+  one shared build instead of recompiling per host.
+  Ensure to set build_and_test.persist_build: true
+
+parameters:
+  project_path:
+    description: Host csproj to publish to app/out.
+    type: string
+
+steps:
+  # publish --no-build still needs ~/.nuget/packages to assemble the output, and
+  # that cache doesn't travel in the workspace — so restore it here first.
+  - restore_nuget_cache
+  - publish_solution_nobuild:
+      project_path: <<parameters.project_path>>

@@ -1,0 +1,16 @@
+description: >
+  Compute a NuGet cache key from every csproj/lock file and restore the
+  ~/.nuget/packages cache. Does not save — the job that populates the cache
+  (build_and_test) saves after `dotnet restore` using the same
+  /tmp/nuget-cache-key this command writes.
+
+steps:
+  - run:
+      name: "Preparing NuGet cache key"
+      command: |
+        find . \( -name '*.csproj' -o -name 'packages.lock.json' \) -print0 \
+          | sort -z | xargs -0 cat 2>/dev/null | sha256sum | cut -d' ' -f1 > /tmp/nuget-cache-key || echo "nolock" > /tmp/nuget-cache-key
+  - restore_cache:
+      keys:
+        - dotnet-nuget-v1-{{ checksum "/tmp/nuget-cache-key" }}
+        - dotnet-nuget-v1-

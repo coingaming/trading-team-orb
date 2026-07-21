@@ -1,0 +1,103 @@
+description: >
+  Build, test and optionally pack + publish in a single job (compiles once,
+  reuses via --no-build). Opt-in replacement for the test + build + nuget jobs.
+
+executor:
+  name: default
+  tag: <<parameters.builder_image_tag>>
+  resource_class: <<parameters.executor_class>>
+
+parameters:
+  builder_image_tag:
+    default: '9.0'
+    description: Tag of builder image
+    type: string
+  executor_class:
+    default: 'medium'
+    type: string
+  project_path:
+    description: Host csproj to publish to app/out. Empty for library repos (test + pack only).
+    type: string
+    default: ""
+  namespaces:
+    description: Space-separated projects to pack as NuGets. Empty skips packing.
+    type: string
+    default: ""
+  sonarscanner_project_key:
+    description: Project Key For SonarScanner. Empty skips Sonar.
+    type: string
+    default: ""
+  base_version:
+    description: Base version, required when namespaces is set.
+    type: string
+    default: ""
+  pipeline_id:
+    description: Pipeline number used in the NuGet version, required when namespaces is set.
+    type: integer
+    default: 0
+  run_marten_codegen:
+    default: false
+    description: Set this to true for projects that implement code generation for Marten
+    type: boolean
+  with_db:
+    default: false
+    description: Start the local PostgreSQL service before tests (needs a *-db builder image).
+    type: boolean
+  test_containers_required:
+    default: true
+    description: Set true when tests launch Docker containers (Testcontainers or raw Docker) — provisions remote Docker. Not needed for pure unit tests or in-image DB tests (with_db).
+    type: boolean
+  docker_layer_caching:
+    default: true
+    description: Docker layer caching — a paid ~200 credit/job feature. On by default to keep existing behaviour; set false per project to save ~200 credits/run when in-test image pulls/builds are light.
+    type: boolean
+  persist_build:
+    default: false
+    description: Persist the compiled tree so separate publish jobs can reuse it (--no-build). Set true for multi-host repos.
+    type: boolean
+
+steps:
+  - when:
+      condition: <<parameters.with_db>>
+      steps:
+        - start_postgresql_service
+  - git-shallow-clone/checkout_advanced:
+      clone_options: '--filter=blob:none'
+  - run:
+      name: "Git fetch"
+      command: git fetch --no-filter --refetch
+  - when:
+      condition: <<parameters.test_containers_required>>
+      steps:
+        - setup_remote_docker: # provisioned only when tests launch containers
+            docker_layer_caching: <<parameters.docker_layer_caching>>
+  - when:
+      condition: <<parameters.namespaces>>
+      steps:
+        - inject_version_data:
+            base_version: <<parameters.base_version>>
+            pipeline_id: <<parameters.pipeline_id>>
+  - build_and_test:
+      project_path: <<parameters.project_path>>
+      namespaces: <<parameters.namespaces>>
+      sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
+      run_marten_codegen: <<parameters.run_marten_codegen>>
+  # Persists the whole tree (parity with build job): needed when this job
+  # publishes inline (project_path) or when downstream publish jobs will reuse
+  # the compiled tree (persist_build). Docker builds -f CircleDockerfile . and
+  # some Dockerfiles COPY more than app/out, so the whole tree is kept.
+  - when:
+      condition:
+        or:
+          - <<parameters.project_path>>
+          - <<parameters.persist_build>>
+      steps:
+        - persist_to_workspace:
+            root: ./
+            paths:
+              - .
+  - inject_slack_templates
+  - slack/notify:
+      event: fail
+      template: BUILD_FAILED_TEMPLATE
+      channel: odds88-circleci-notifications
