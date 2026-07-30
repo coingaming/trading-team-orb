@@ -13,6 +13,14 @@ parameters:
   sonarscanner_project_key:
     description: Project Key For SonarScanner
     type: string
+  docker_layer_caching:
+    default: false
+    description: >
+      Docker layer caching, billed at a flat ~200 credits per job run. Off by
+      default: dotnet_test runs no docker build, so the cache only ever absorbs
+      Testcontainers image pulls, which cost a few credits to redo. Set true per
+      project if those pulls prove expensive.
+    type: boolean
 
 steps:
   - start_postgresql_service
@@ -22,7 +30,7 @@ steps:
       name: "Git fetch"
       command: git fetch --no-filter --refetch
   - setup_remote_docker: # For integration tests
-      docker_layer_caching: true
+      docker_layer_caching: <<parameters.docker_layer_caching>>
   - dotnet_test:
       sonarscanner_project_key: <<parameters.sonarscanner_project_key>>
   - inject_slack_templates
