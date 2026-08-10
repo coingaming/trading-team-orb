@@ -32,7 +32,7 @@ Integration tests for new commands go into `test-deploy.yml`'s `jobs:` section a
 
 `src/@orb.yml` is the orb root: description, display URLs, and imported orbs (`circleci/slack@5.1.1` as `slack`, `guitarrapc/git-shallow-clone` as `git-shallow-clone`). At pack time each directory becomes a top-level key, with the filename as the element name (`src/jobs/build.yml` → job `build`).
 
-- [src/executors/](src/executors/) — `default` (.NET SDK image `trading-dev-core-sdk`, tag parameterized, working dir `/mnt/ramdisk`) and `docker-builder` (`trading-dev-docker-build:4.0`, used for anything touching Docker/Helm/AWS).
+- [src/executors/](src/executors/) — `default` (.NET SDK image `trading-dev-core-sdk`, tag parameterized, working dir `/mnt/ramdisk`) and `docker-builder` (`trading-dev-docker-build:4.0`, used for anything touching Docker/AWS/ArgoCD).
 - [src/commands/](src/commands/) — the reusable steps that do real work.
 - [src/jobs/](src/jobs/) — the public surface consumers use. Jobs are thin: pick an executor, declare parameters, call commands, then notify Slack.
 - [src/scripts/](src/scripts/) — shell bodies inlined via `<<include(scripts/x.sh)>>`; the only part covered by BATS tests.
@@ -49,27 +49,27 @@ Integration tests for new commands go into `test-deploy.yml`'s `jobs:` section a
 
 This is hardcoded in shell across several commands and is the single most important thing to keep consistent when editing them:
 
-| Branch | Env name | Global namespace | Tenant namespace | Cluster vars |
-|---|---|---|---|---|
-| `master` | TEST | `trading-test` | `tenant-<id>-dev` | `DEV_CLUSTER_NAME` / `TEST_CLUSTER_VALUES_NAME` |
-| `staging` | STAGE | `trading-stage` | `tenant-<id>-stage` | `STAGING_*` |
-| `release` | PROD | `trading-prod` | `tenant-<id>-prod` | `PROD_*` |
+| Branch | Env name | Common-project branch | Version suffix |
+|---|---|---|---|
+| `master` | TEST | `test` | `test` |
+| `staging` | STAGE | `staging` | `staging` |
+| `release` | PROD | `release` | `release` |
 
-Note the asymmetry: [deploy_using_helm.yml](src/commands/deploy_using_helm.yml) defaults values to `TEST_CLUSTER_VALUES_NAME` while [deploy_using_helm_tenanted.yml](src/commands/deploy_using_helm_tenanted.yml) defaults to `DEV_CLUSTER_VALUES_NAME`. Any new env-aware command must reproduce all three branches.
+Any new env-aware command must reproduce all three branches (and fall back to `master` for anything else, as `checkout_common_project` does).
 
 ### External repositories the orb clones at runtime
 
 Several commands clone sibling private repos over SSH using a deploy key echoed into `~/.ssh/id_rsa_1`:
 
-- `coingaming/trading-circleci-notifications` (`GITHUB_DEPLOY_PRIVATE_KEY`) — Slack message templates, the `users_map.json` CircleCI-user → Slack-tag map, and the shared `helm/` chart. Cloned by `checkout_common_project`, `inject_slack_templates`, `lint_helm*`.
-- `coingaming/tradeart-terraform` (`GITHUB_TERRAFORM_PRIVATE_KEY`) — per-tenant Helm values at `terraform/clients/pool1/tenant-<id>/`. Cloned by `checkout_terraform_project`.
+- `coingaming/trading-circleci-notifications` (`GITHUB_DEPLOY_PRIVATE_KEY`) — Slack message templates and the `users_map.json` CircleCI-user → Slack-tag map. Cloned by `checkout_common_project` and `inject_slack_templates`.
 - `coingaming/tradeart-tenants` / `tradeart-tenants-prod` (`DEV_CLUSTER_REPO_KEY` / `PROD_CLUSTER_REPO_KEY`) — ArgoCD GitOps repos; `update_argo_image_*` `sed`s the image tag and pushes a commit.
 - `coingaming/tradeart-intent-modules` (`GITHUB_INTENT_PRIVATE_KEY`) — Intent Architect modules for `intent_check`.
 
-### Two deployment paths
+### Deployment
 
-- **Helm push** (`helm`, `helm-tenanted`): `connect_to_vpn` opens an SSH tunnel through `vpn.trading.io` to the K8s API endpoint, then `helm upgrade --install --atomic`. Validated ahead of time by `validate-helm` / `validate-helm-tenanted` (helm lint against the same values file).
-- **ArgoCD GitOps** (`argo_deploy_dev`, `argo_deploy_prod`): no cluster access; commits a new image tag to the tenants repo. `deployment_type: global` edits `argocd/services/overlays/<env>/<svc>/version.yaml`; `tenanted` edits `argocd/base/.../deployment.yaml`.
+Deployment is **ArgoCD GitOps only** (`argo_deploy_dev`, `argo_deploy_prod`) — the orb never touches a cluster. It commits a new image tag to the tenants repo: `deployment_type: global` edits `argocd/services/overlays/<env>/<svc>/version.yaml`; `tenanted` edits `argocd/base/.../deployment.yaml`. `lambda_deploy` is the one exception, calling `aws lambda update-function-code` directly.
+
+The Helm push path (`helm`, `helm-tenanted`, `validate-helm`, `validate-helm-tenanted`, `connect_to_vpn`, `checkout_terraform_project`) was removed in v5 — do not reintroduce cluster-facing deploys.
 
 ### Testing jobs
 
