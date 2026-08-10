@@ -23,17 +23,19 @@ workflows:
       - orb-tools/publish:
           name: DEV publish
           orb_name: odds88/tradeart-orb
-          vcs_type: << pipeline.project.type >>
+          # Hardcoded: << pipeline.project.type >> resolves to "circleci" under the
+          # GitHub App integration, which orb-tools' vcs_type enum does not accept.
+          vcs_type: github
           pub_type: dev
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
           # Use a context to hold your publishing token.
-          context: trading
+          context: tradeart
           filters: *filters
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
           pipeline_number: << pipeline.number >>
-          vcs_type: << pipeline.project.type >>
+          vcs_type: github
           orb_name: tradeart-orb
           requires:
             - DEV publish

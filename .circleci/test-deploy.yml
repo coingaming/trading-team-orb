@@ -42,7 +42,9 @@ workflows:
       - orb-tools/publish:
           name: PROD publish
           orb_name: odds88/tradeart-orb
-          vcs_type: << pipeline.project.type >>
+          # Hardcoded: << pipeline.project.type >> resolves to "circleci" under the
+          # GitHub App integration, which orb-tools' vcs_type enum does not accept.
+          vcs_type: github
           pub_type: production
           # Ensure this job requires all test jobs and the pack job.
           requires:
