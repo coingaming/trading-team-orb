@@ -22,7 +22,7 @@ workflows:
           filters: *filters
       - orb-tools/publish:
           name: DEV publish
-          orb_name: coingaming/trading-team-orb
+          orb_name: odds88/tradeart-orb
           vcs_type: << pipeline.project.type >>
           pub_type: dev
           requires:
@@ -34,7 +34,7 @@ workflows:
       - orb-tools/continue:
           pipeline_number: << pipeline.number >>
           vcs_type: << pipeline.project.type >>
-          orb_name: trading-team-orb
+          orb_name: tradeart-orb
           requires:
             - DEV publish
           filters: *filters

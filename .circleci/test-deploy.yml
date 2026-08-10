@@ -4,7 +4,7 @@ orbs:
   # Reference your orb's jobs and commands below as they will exist when built.
   orb-tools: circleci/orb-tools@12.0
   # The orb definition is intentionally not included here. It will be injected into the pipeline.
-  trading-team-orb: {}
+  tradeart-orb: {}
 
 # Use this tag to ensure test jobs always run,
 # even though the downstream publish job will only run on release tags.
@@ -28,7 +28,7 @@ jobs:
     steps:
       - checkout
       # Run your orb's commands to validate them.
-      - trading-team-orb/greet
+      - tradeart-orb/greet
 workflows:
   test-deploy:
     jobs:
@@ -41,7 +41,7 @@ workflows:
           filters: *release-filters
       - orb-tools/publish:
           name: PROD publish
-          orb_name: coingaming/trading-team-orb
+          orb_name: odds88/tradeart-orb
           vcs_type: << pipeline.project.type >>
           pub_type: production
           # Ensure this job requires all test jobs and the pack job.
