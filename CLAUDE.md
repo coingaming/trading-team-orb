@@ -30,7 +30,7 @@ Integration tests for new commands go into `test-deploy.yml`'s `jobs:` section a
 
 ## Source layout and composition model
 
-`src/@orb.yml` is the orb root: description, display URLs, and imported orbs (`circleci/slack@5.1.1` as `slack`, `guitarrapc/git-shallow-clone` as `git-shallow-clone`). At pack time each directory becomes a top-level key, with the filename as the element name (`src/jobs/build.yml` → job `build`).
+`src/@orb.yml` is the orb root: description, display URLs, and imported orbs (`circleci/slack@5.1.1` as `slack`). At pack time each directory becomes a top-level key, with the filename as the element name (`src/jobs/build.yml` → job `build`).
 
 - [src/executors/](src/executors/) — `default` (.NET SDK image `trading-dev-core-sdk`, tag parameterized, working dir `/mnt/ramdisk`) and `docker-builder` (`trading-dev-docker-build:4.0`, used for anything touching Docker/AWS/ArgoCD).
 - [src/commands/](src/commands/) — the reusable steps that do real work.
@@ -73,4 +73,4 @@ The Helm push path (`helm`, `helm-tenanted`, `validate-helm`, `validate-helm-ten
 
 ### Testing jobs
 
-`test` and `test-with-db` both shallow-clone (`--filter=blob:none`) then `git fetch --no-filter --refetch` — Sonar needs full history. `docker_layer_caching` is opt-in (default `false`) because it bills a flat ~200 credits and these jobs run no docker build. `dotnet_test` runs the SonarCloud scanner (org `odds88`); `dotnet_test_no_sonar` / `test_no_sonar` are the fork for repos without a Sonar project. Both convert `.trx` to JUnit via `trx2junit` before `store_test_results`.
+`test` and `test-with-db` both `checkout` then `git fetch --no-filter --refetch`. CircleCI's checkout is a *blobless* clone (`--filter=blob:none`); without the refetch to hydrate the blobs, SonarCloud's jgit blame fails with `Missing blob`. Keep that fetch on any job running the Sonar scanner, and use the built-in `checkout` — clone orbs that rely on `$CIRCLE_REPOSITORY_URL` or `$CHECKOUT_KEY` fail, as GitHub App projects set neither. `docker_layer_caching` is opt-in (default `false`) because it bills a flat ~200 credits and these jobs run no docker build. `dotnet_test` runs the SonarCloud scanner (org `odds88`); `dotnet_test_no_sonar` / `test_no_sonar` are the fork for repos without a Sonar project. Both convert `.trx` to JUnit via `trx2junit` before `store_test_results`.

@@ -12,4 +12,3 @@ display:
 
 orbs:
   slack: circleci/slack@5.1.1 # https://circleci.com/developer/orbs/orb/circleci/slack
-  git-shallow-clone: guitarrapc/git-shallow-clone@2.8.0

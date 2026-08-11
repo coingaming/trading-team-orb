@@ -24,8 +24,9 @@ parameters:
 
 steps:
   - start_postgresql_service
-  - git-shallow-clone/checkout_advanced:
-      clone_options: '--filter=blob:none'
+  # checkout is a blobless clone, so the fetch below hydrates the blobs
+  # SonarCloud's jgit blame needs.
+  - checkout
   - run:
       name: "Git fetch"
       command: git fetch --no-filter --refetch
