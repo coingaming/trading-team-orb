@@ -50,6 +50,6 @@ workflows:
           requires:
             - orb-tools/pack
             - command-test
-          context: global
+          context: orb-tools
           circleci_token: CIRCLE_CI_API_KEY
           filters: *release-filters
