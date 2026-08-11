@@ -28,7 +28,7 @@ steps:
         ssh-add -D
         chmod 600 ~/.ssh/id_rsa_1
         rm -rf tradeart-tenants
-        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone git@github.com:coingaming/tradeart-tenants.git
+        GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_1" git clone git@github.com:Odds88-Team/tradeart-tenants.git
   - run:
       name: "Updating Image Tag"
       command: |

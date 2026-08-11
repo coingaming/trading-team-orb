@@ -61,9 +61,9 @@ Any new env-aware command must reproduce all three branches (and fall back to `m
 
 Several commands clone sibling private repos over SSH using a deploy key echoed into `~/.ssh/id_rsa_1`:
 
-- `coingaming/trading-circleci-notifications` (`GITHUB_DEPLOY_PRIVATE_KEY`) — Slack message templates and the `users_map.json` CircleCI-user → Slack-tag map. Cloned by `checkout_common_project` and `inject_slack_templates`.
-- `coingaming/tradeart-tenants` / `tradeart-tenants-prod` (`DEV_CLUSTER_REPO_KEY` / `PROD_CLUSTER_REPO_KEY`) — ArgoCD GitOps repos; `update_argo_image_*` `sed`s the image tag and pushes a commit.
-- `coingaming/tradeart-intent-modules` (`GITHUB_INTENT_PRIVATE_KEY`) — Intent Architect modules for `intent_check`.
+- `Odds88-Team/tradeart-circleci-notifications` (`GITHUB_DEPLOY_PRIVATE_KEY`) — Slack message templates and the `users_map.json` CircleCI-user → Slack-tag map. Cloned by `checkout_common_project` and `inject_slack_templates`.
+- `Odds88-Team/tradeart-tenants` / `tradeart-tenants-prod` (`DEV_CLUSTER_REPO_KEY` / `PROD_CLUSTER_REPO_KEY`) — ArgoCD GitOps repos; `update_argo_image_*` `sed`s the image tag and pushes a commit.
+- `Odds88-Team/tradeart-intent-modules` (`GITHUB_INTENT_PRIVATE_KEY`) — Intent Architect modules for `intent_check`.
 
 ### Deployment
 
@@ -73,4 +73,4 @@ The Helm push path (`helm`, `helm-tenanted`, `validate-helm`, `validate-helm-ten
 
 ### Testing jobs
 
-`test` and `test-with-db` both shallow-clone (`--filter=blob:none`) then `git fetch --no-filter --refetch` — Sonar needs full history. `docker_layer_caching` is opt-in (default `false`) because it bills a flat ~200 credits and these jobs run no docker build. `dotnet_test` runs the SonarCloud scanner (org `coingaming`); `dotnet_test_no_sonar` / `test_no_sonar` are the fork for repos without a Sonar project. Both convert `.trx` to JUnit via `trx2junit` before `store_test_results`.
+`test` and `test-with-db` both shallow-clone (`--filter=blob:none`) then `git fetch --no-filter --refetch` — Sonar needs full history. `docker_layer_caching` is opt-in (default `false`) because it bills a flat ~200 credits and these jobs run no docker build. `dotnet_test` runs the SonarCloud scanner (org `odds88`); `dotnet_test_no_sonar` / `test_no_sonar` are the fork for repos without a Sonar project. Both convert `.trx` to JUnit via `trx2junit` before `store_test_results`.

@@ -19,7 +19,7 @@ Variables not listed here (`FULL_VERSION`, `VERSION_PREFIX`, `VERSION_SUFFIX`, `
 | Variable | Used by | Purpose |
 | --- | --- | --- |
 | `SLACK_ACCESS_TOKEN` | **all jobs** | Slack bot token for `circleci/slack@5.1.1`; every job ends with a `slack/notify` to `odds88-circleci-notifications`. |
-| `GITHUB_DEPLOY_PRIVATE_KEY` | **all jobs** | SSH deploy key for `coingaming/trading-circleci-notifications` — Slack templates and the `users_map.json` CircleCI-user → Slack-tag map. Read by `inject_slack_templates` (in every job) and `checkout_common_project`. |
+| `GITHUB_DEPLOY_PRIVATE_KEY` | **all jobs** | SSH deploy key for `Odds88-Team/tradeart-circleci-notifications` — Slack templates and the `users_map.json` CircleCI-user → Slack-tag map. Read by `inject_slack_templates` (in every job) and `checkout_common_project`. |
 
 ### AWS
 
@@ -34,20 +34,20 @@ Variables not listed here (`FULL_VERSION`, `VERSION_PREFIX`, `VERSION_SUFFIX`, `
 
 | Variable | Used by | Purpose |
 | --- | --- | --- |
-| `DEV_CLUSTER_REPO_KEY` | `argo_deploy_dev` | SSH deploy key (write) for `coingaming/tradeart-tenants`. |
-| `PROD_CLUSTER_REPO_KEY` | `argo_deploy_prod` | SSH deploy key (write) for `coingaming/tradeart-tenants-prod`. |
+| `DEV_CLUSTER_REPO_KEY` | `argo_deploy_dev` | SSH deploy key (write) for `Odds88-Team/tradeart-tenants`. |
+| `PROD_CLUSTER_REPO_KEY` | `argo_deploy_prod` | SSH deploy key (write) for `Odds88-Team/tradeart-tenants-prod`. |
 
 ### Tests
 
 | Variable | Used by | Purpose |
 | --- | --- | --- |
-| `SONAR_TOKEN` | `test`, `test-with-db` | SonarCloud token (org `coingaming`) for `dotnet sonarscanner`. Not needed by `test_no_sonar`. |
+| `SONAR_TOKEN` | `test`, `test-with-db` | SonarCloud token (org `odds88`) for `dotnet sonarscanner`. Not needed by `test_no_sonar`. |
 
 ### Intent Architect
 
 | Variable | Used by | Purpose |
 | --- | --- | --- |
-| `GITHUB_INTENT_PRIVATE_KEY` | `intent_check` | SSH deploy key for `coingaming/tradeart-intent-modules`. |
+| `GITHUB_INTENT_PRIVATE_KEY` | `intent_check` | SSH deploy key for `Odds88-Team/tradeart-intent-modules`. |
 | `INTENT_USERNAME` | `intent_check` | Intent Architect account used by `intent-cli ensure-no-outstanding-changes`. |
 | `INTENT_PASSWORD` | `intent_check` | Intent Architect password. |
 
