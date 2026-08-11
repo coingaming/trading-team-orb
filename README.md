@@ -19,7 +19,7 @@ Variables not listed here (`FULL_VERSION`, `VERSION_PREFIX`, `VERSION_SUFFIX`, `
 | Variable | Used by | Purpose |
 | --- | --- | --- |
 | `SLACK_ACCESS_TOKEN` | **all jobs** | Slack bot token for `circleci/slack@5.1.1`; every job ends with a `slack/notify` to `odds88-circleci-notifications`. |
-| `GITHUB_DEPLOY_PRIVATE_KEY` | **all jobs** | SSH deploy key for `Odds88-Team/tradeart-circleci-notifications` — Slack templates and the `users_map.json` CircleCI-user → Slack-tag map. Read by `inject_slack_templates` (in every job) and `checkout_common_project`. |
+| `GITHUB_DEPLOY_PRIVATE_KEY` | **all jobs** | SSH deploy key for `Odds88-Team/tradeart-circleci-notifications` — Slack templates and the `users_map.json` CircleCI-user → Slack-tag map. Read by `inject_slack_templates` (in every job). |
 
 ### AWS
 

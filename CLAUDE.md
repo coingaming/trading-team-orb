@@ -49,19 +49,19 @@ Integration tests for new commands go into `test-deploy.yml`'s `jobs:` section a
 
 This is hardcoded in shell across several commands and is the single most important thing to keep consistent when editing them:
 
-| Branch | Env name | Common-project branch | Version suffix |
-|---|---|---|---|
-| `master` | TEST | `test` | `test` |
-| `staging` | STAGE | `staging` | `staging` |
-| `release` | PROD | `release` | `release` |
+| Branch | Env name | Version suffix |
+|---|---|---|
+| `master` | TEST | `test` |
+| `staging` | STAGE | `staging` |
+| `release` | PROD | `release` |
 
-Any new env-aware command must reproduce all three branches (and fall back to `master` for anything else, as `checkout_common_project` does).
+Any new env-aware command must reproduce all three branches and fall back to `master` for anything else. `tradeart-circleci-notifications` is *not* env-aware: `inject_slack_templates` clones its default branch.
 
 ### External repositories the orb clones at runtime
 
 Several commands clone sibling private repos over SSH using a deploy key echoed into `~/.ssh/id_rsa_1`:
 
-- `Odds88-Team/tradeart-circleci-notifications` (`GITHUB_DEPLOY_PRIVATE_KEY`) — Slack message templates and the `users_map.json` CircleCI-user → Slack-tag map. Cloned by `checkout_common_project` and `inject_slack_templates`.
+- `Odds88-Team/tradeart-circleci-notifications` (`GITHUB_DEPLOY_PRIVATE_KEY`) — Slack message templates and the `users_map.json` CircleCI-user → Slack-tag map. Cloned by `inject_slack_templates`.
 - `Odds88-Team/tradeart-tenants` / `tradeart-tenants-prod` (`DEV_CLUSTER_REPO_KEY` / `PROD_CLUSTER_REPO_KEY`) — ArgoCD GitOps repos; `update_argo_image_*` `sed`s the image tag and pushes a commit.
 - `Odds88-Team/tradeart-intent-modules` (`GITHUB_INTENT_PRIVATE_KEY`) — Intent Architect modules for `intent_check`.
 
