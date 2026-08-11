@@ -21,6 +21,7 @@ steps:
   - run:
       name: "Clonning ArgoCD repository"
       command: |
+        mkdir -p ~/.ssh
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         echo '-----BEGIN OPENSSH PRIVATE KEY-----' > ~/.ssh/id_rsa_1
         echo $DEV_CLUSTER_REPO_KEY >> ~/.ssh/id_rsa_1
